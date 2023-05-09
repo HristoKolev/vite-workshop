@@ -1,9 +1,31 @@
 # Vite
 
-## 0 - Create project with vite
+## 0 - Create project
+
+- Create the project using the vite generator
 
 ```shell
 npm create vite@latest vite-app -- -- --template react-ts
+```
+
+- Add to the vite config 
+
+```
+build: {
+  sourcemap: true,
+},
+server: {
+  cors: true,
+  port: 3000,
+  strictPort: true,
+  host: true,
+},
+preview: {
+  cors: true,
+  port: 3000,
+  strictPort: true,
+  host: true,
+},
 ```
 
 - Install some library from npm that you want to use.
@@ -24,7 +46,7 @@ npm i date-fns
   "start": "vite",
 ```
 
-## 1 - Install `prettier`
+## 1 - Prettier
 
 
 - Install the package
@@ -46,7 +68,7 @@ npm i -D prettier
   "prettier.configPath": ".prettierrc"
 ```
 
-# 2 - tailwind
+## 2 - Tailwind
 
 * install the package
 
@@ -63,7 +85,7 @@ npm i -D tailwindcss
 @tailwind utilities;
 ```
 
-# 3 - Vitest
+## 3 - Vitest
 
 ```shell
 npm i -D vitest
@@ -91,4 +113,86 @@ test: {
 
 ```
  "test": "vitest",
+```
+
+## 4 - ESLint
+
+- Install the extra packages
+
+```shell
+npm i -D eslint-config-airbnb
+npm i -D eslint-plugin-import
+npm i -D eslint-plugin-react
+npm i -D eslint-plugin-jsx-a11y
+npm i -D eslint-config-airbnb-typescript
+npm i -D eslint-plugin-eslint-comments
+npm i -D eslint-import-resolver-alias
+npm i -D eslint-config-prettier
+npm i -D eslint-plugin-prettier
+npm i -D eslint-plugin-vitest
+npm i -D eslint-plugin-testing-library
+```
+
+- Remove the existing eslint config
+
+- Add the eslint config files
+
+- Add the npm script
+
+```
+"lint": "eslint ./ --max-warnings 0",
+```
+
+- Demonstrate WebStorm config
+- Demonstrate VSCode config
+  - https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
+
+```
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": ["typescript", "typescriptreact"]
+```
+
+## 5 - Transform Imports
+
+- Install the package
+
+
+```shell
+npm i -D vite-tsconfig-paths
+```
+
+- Add it to vite 
+
+```
+tsconfigPaths()
+```
+- Add to the typescript config
+
+```
+"baseUrl": "./",
+"paths": {
+  "~*": ["src/*"],
+  "src/*": ["src/*"]
+}
+```
+
+- Change the imports in `App.tsx`
+
+```
+import { formatDate } from '~helpers';
+import logoUrl from 'src/logo.png';
+```
+
+## 6 - Bundle Analyzer
+
+```shell
+npm i -D source-map-explorer
+```
+
+- Add the npm script
+
+```
+"profile": "npm run build && source-map-explorer dist/**/*.js"
 ```

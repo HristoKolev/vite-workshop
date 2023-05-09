@@ -1,0 +1,103 @@
+{
+  "root": true,
+  "env": {
+    "es6": true,
+    "browser": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react-hooks/recommended",
+    "airbnb",
+    "airbnb/hooks",
+    "airbnb-typescript",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:eslint-comments/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "prettier"
+  ],
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "project": ["tsconfig.json"]
+  },
+  "settings": {
+    "import/internal-regex": "^~",
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "react": {
+      "version": "detect"
+    }
+  },
+  "plugins": [
+    "react-refresh",
+    "react",
+    "@typescript-eslint",
+    "eslint-comments",
+    "prettier"
+  ],
+  "rules": {
+    "react-refresh/only-export-components": "warn",
+    "no-console": "error",
+    "import/no-unresolved": "off",
+    "react/react-in-jsx-scope": "off",
+    "import/prefer-default-export": "off",
+    "react/function-component-definition": "off",
+    "no-void": "off",
+    "prettier/prettier": "error",
+    "import/extensions": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "unknown",
+          "index",
+          ["sibling", "parent"],
+          "object"
+        ],
+        "newlines-between": "always",
+        "pathGroups": [
+          {
+            "pattern": "~/**",
+            "group": "internal"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin", "external"]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["**/+(*.)+(spec|test).+(ts|js)?(x)"],
+      "plugins": ["vitest"],
+      "extends": ["plugin:vitest/recommended", "plugin:testing-library/react"],
+      "rules": {
+        "testing-library/no-wait-for-multiple-assertions": "off"
+      }
+    }
+  ],
+  "reportUnusedDisableDirectives": true
+}
