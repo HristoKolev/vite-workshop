@@ -1,6 +1,5 @@
-/// <reference types="vitest" />
-
 import { defineConfig } from 'vite';
+import { configDefaults } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -25,5 +24,16 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./setupTests.ts'],
+    coverage: {
+      enabled: true,
+      provider: 'c8',
+      all: true,
+      src: ['src'],
+      exclude: [...configDefaults.coverage.exclude, 'main.tsx'],
+      lines: 90,
+      statements: 90,
+      functions: 90,
+      branches: 90,
+    },
   },
 });

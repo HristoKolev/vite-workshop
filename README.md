@@ -46,115 +46,7 @@ npm i date-fns
   "start": "vite",
 ```
 
-## 1 - Prettier
-
-
-- Install the package
-
-```shell
-npm i -D prettier
-```
-
-- Add the config files
-
-- Demonstrate WebStorm config
-- Demonstrate VSCode config
-    - https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
-
-```
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "prettier.useEditorConfig": true,
-  "prettier.configPath": ".prettierrc"
-```
-
-## 2 - Tailwind
-
-* install the package
-
-```shell
-npm i -D tailwindcss
-```
-
-* copy the tailwind, postcss configs
-
-* add the tailwind directives on top of your css file
-```
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-
-## 3 - Vitest
-
-```shell
-npm i -D vitest
-npm i -D @testing-library/dom @testing-library/react jsdom
-npm i -D @testing-library/user-event @testing-library/jest-dom
-npm i -D node-fetch@2 msw
-```
-
-- Change the vite config
-
-```
-/// <reference types="vitest" />
-```
-
-```
-test: {
-  environment: 'jsdom',
-  setupFiles: ['./setupTests.ts'],
-},
-```
-
-- Add the test setup file
-
-- Add the npm script
-
-```
- "test": "vitest",
-```
-
-## 4 - ESLint
-
-- Install the extra packages
-
-```shell
-npm i -D eslint-config-airbnb
-npm i -D eslint-plugin-import
-npm i -D eslint-plugin-react
-npm i -D eslint-plugin-jsx-a11y
-npm i -D eslint-config-airbnb-typescript
-npm i -D eslint-plugin-eslint-comments
-npm i -D eslint-import-resolver-alias
-npm i -D eslint-config-prettier
-npm i -D eslint-plugin-prettier
-npm i -D eslint-plugin-vitest
-npm i -D eslint-plugin-testing-library
-```
-
-- Remove the existing eslint config
-
-- Add the eslint config files
-
-- Add the npm script
-
-```
-"lint": "eslint ./ --max-warnings 0",
-```
-
-- Demonstrate WebStorm config
-- Demonstrate VSCode config
-  - https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
-
-```
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-  "eslint.validate": ["typescript", "typescriptreact"]
-```
-
-## 5 - Transform Imports
+## 1 - Transform Imports
 
 - Install the package
 
@@ -163,7 +55,7 @@ npm i -D eslint-plugin-testing-library
 npm i -D vite-tsconfig-paths
 ```
 
-- Add it to vite 
+- Add it to vite
 
 ```
 tsconfigPaths()
@@ -185,7 +77,7 @@ import { formatDate } from '~helpers';
 import logoUrl from 'src/logo.png';
 ```
 
-## 6 - Bundle Analyzer
+## 2 - Bundle Analyzer
 
 ```shell
 npm i -D source-map-explorer
@@ -196,3 +88,138 @@ npm i -D source-map-explorer
 ```
 "profile": "npm run build && source-map-explorer dist/**/*.js"
 ```
+
+## 3 - Tailwind
+
+* install the package
+
+```shell
+npm i -D tailwindcss
+```
+
+* copy the tailwind, postcss configs
+
+* add the tailwind directives on top of your css file
+```
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+## 4 - Vitest
+
+```shell
+npm i -D vitest @vitest/coverage-c8
+npm i -D @testing-library/dom @testing-library/react @testing-library/user-event @testing-library/jest-dom jsdom 
+npm i -D msw node-fetch@2
+```
+
+- Add this import to the vite config
+
+```
+import { configDefaults } from 'vitest/config';
+```
+
+This also happens to import the vitest types for the vite config. if you don't need the default config you can use `/// <reference types="vitest" />` to import just the types.
+
+```
+test: {
+  environment: 'jsdom',
+  setupFiles: ['./setupTests.ts'],
+  coverage: {
+    enabled: true,
+    provider: 'c8',
+    all: true,
+    src: ['src'],
+    exclude: [...configDefaults.coverage.exclude, 'main.tsx'],
+    lines: 90,
+    statements: 90,
+    functions: 90,
+    branches: 90,
+  },
+},
+```
+
+- Add the test setup file
+
+- Add the npm script
+
+```
+ "test": "vitest run",
+```
+
+## 5 - Prettier
+
+
+- Install the package
+
+```shell
+npm i -D prettier
+```
+
+- Add the config files
+
+- Add the npm script
+
+```
+"fmt": "prettier --write .",
+```
+
+- Demonstrate WebStorm config
+- Demonstrate VSCode config
+  - https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
+
+```
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "prettier.useEditorConfig": true,
+  "prettier.configPath": ".prettierrc"
+```
+
+## 6 - ESLint
+
+- Install the extra packages
+
+```shell
+npm i -D eslint-config-airbnb
+npm i -D eslint-config-airbnb-typescript
+npm i -D eslint-config-prettier
+npm i -D eslint-import-resolver-alias
+npm i -D eslint-plugin-import
+npm i -D eslint-plugin-react
+npm i -D eslint-plugin-jsx-a11y
+npm i -D eslint-plugin-eslint-comments
+npm i -D eslint-plugin-prettier
+npm i -D eslint-plugin-vitest
+npm i -D eslint-plugin-testing-library
+```
+
+- Remove the existing eslint config
+
+- Add the eslint config files
+
+- Add the npm script
+
+```
+"lint": "eslint ./ --max-warnings 0",
+```
+
+- Modify the build npm script
+ 
+```
+"build": "npm run lint && tsc && vite build",
+```
+
+- Demonstrate WebStorm config
+- Demonstrate VSCode config
+  - https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
+
+```
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": ["typescript", "typescriptreact"]
+```
+
+
+

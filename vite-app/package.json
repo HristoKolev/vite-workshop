@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && npm run lint && vite build",
     "lint": "eslint ./ --max-warnings 0",
     "preview": "vite preview",
     "fmt": "prettier --write .",
-    "test": "vitest",
+    "test": "vitest run",
     "profile": "npm run build && source-map-explorer dist/**/*.js"
   },
   "dependencies": {
@@ -27,6 +27,7 @@
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "@vitejs/plugin-react": "^4.0.0",
+    "@vitest/coverage-c8": "^0.31.0",
     "eslint": "^8.38.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
