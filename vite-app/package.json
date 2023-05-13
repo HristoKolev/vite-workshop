@@ -5,12 +5,12 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "build": "tsc && npm run lint && vite build",
-    "lint": "eslint ./ --max-warnings 0",
+    "build": "npm run lint && tsc && vite build",
     "preview": "vite preview",
-    "fmt": "prettier --write .",
+    "profile": "npm run build && source-map-explorer dist/**/*.js",
     "test": "vitest run",
-    "profile": "npm run build && source-map-explorer dist/**/*.js"
+    "fmt": "prettier --write .",
+    "lint": "eslint ./ --max-warnings 0"
   },
   "dependencies": {
     "date-fns": "^2.30.0",
@@ -18,7 +18,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@testing-library/dom": "^9.2.0",
+    "@testing-library/dom": "^9.3.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
@@ -40,11 +40,11 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
-    "eslint-plugin-testing-library": "^5.10.3",
+    "eslint-plugin-testing-library": "^5.11.0",
     "eslint-plugin-vitest": "^0.2.2",
     "jsdom": "^22.0.0",
     "msw": "^1.2.1",
-    "node-fetch": "^2.6.10",
+    "node-fetch": "^2.6.11",
     "prettier": "^2.8.8",
     "source-map-explorer": "^2.5.3",
     "tailwindcss": "^3.3.2",

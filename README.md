@@ -8,6 +8,18 @@
 npm create vite@latest vite-app -- -- --template react-ts
 ```
 
+- Navigate into the app directory
+
+```shell
+cd vite-app
+```
+
+- Restore packages
+
+```shell
+npm i
+```
+
 - Add to the vite config 
 
 ```
@@ -28,12 +40,6 @@ preview: {
 },
 ```
 
-- Install some library from npm that you want to use.
-
-```shell
-npm i date-fns
-```
-
 - Add to the typescript configuration
 
 ```
@@ -45,6 +51,18 @@ npm i date-fns
 ```
   "start": "vite",
 ```
+
+- Install some library from npm that you want to use
+
+```shell
+npm i date-fns
+```
+
+- Remove everything except `vite-env.d.ts` from the `src` directory
+
+- Remove the `public` directory
+
+- Copy the app code from the `extra` directory
 
 ## 1 - Transform Imports
 
@@ -91,20 +109,23 @@ npm i -D source-map-explorer
 
 ## 3 - Tailwind
 
-* install the package
+- Install the package
 
 ```shell
 npm i -D tailwindcss
 ```
 
-* copy the tailwind, postcss configs
+- Copy the tailwind, postcss configs from the `extra` directory
 
-* add the tailwind directives on top of your css file
+- Add the tailwind directives on top of your css file
+ 
 ```
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 ```
+
+- Use tailwind somewhere in the application 
 
 ## 4 - Vitest
 
@@ -140,7 +161,7 @@ test: {
 },
 ```
 
-- Add the test setup file
+- Copy the test setup file and the tests from the `extra` directory 
 
 - Add the npm script
 
@@ -163,6 +184,12 @@ npm i -D prettier
 
 ```
 "fmt": "prettier --write .",
+```
+
+- Run the format script
+
+```shell
+npm run fmt
 ```
 
 - Demonstrate WebStorm config
@@ -196,7 +223,9 @@ npm i -D eslint-plugin-testing-library
 
 - Remove the existing eslint config
 
-- Add the eslint config files
+- Add the eslint config files from the `extra` directory
+
+- Remove the existing `lint` script
 
 - Add the npm script
 
@@ -208,6 +237,12 @@ npm i -D eslint-plugin-testing-library
  
 ```
 "build": "npm run lint && tsc && vite build",
+```
+
+- Run the lint script with `--fix`
+
+```shell
+npm run lint -- -- --fix
 ```
 
 - Demonstrate WebStorm config
