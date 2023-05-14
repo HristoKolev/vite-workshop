@@ -60,7 +60,7 @@ npm i date-fns
 
 - Remove everything except `vite-env.d.ts` from the `src` directory
 
-- Remove the `public` directory
+- Remove the `public` directory and edit the `index.html` to remove the icon.
 
 - Copy the app code from the `extra` directory
 
