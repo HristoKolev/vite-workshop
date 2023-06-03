@@ -107,27 +107,7 @@ npm i -D source-map-explorer
 "profile": "npm run build && source-map-explorer dist/**/*.js"
 ```
 
-## 3 - Tailwind
-
-- Install the package
-
-```shell
-npm i -D tailwindcss
-```
-
-- Copy the tailwind, postcss configs from the `extra` directory
-
-- Add the tailwind directives on top of your css file
- 
-```
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-
-- Use tailwind somewhere in the application 
-
-## 4 - Vitest
+## 3 - Vitest
 
 ```shell
 npm i -D vitest @vitest/coverage-c8
@@ -168,6 +148,26 @@ test: {
 ```
  "test": "vitest run",
 ```
+
+## 4 - Tailwind
+
+- Install the package
+
+```shell
+npm i -D tailwindcss
+```
+
+- Copy the tailwind, postcss configs from the `extra` directory
+
+- Add the tailwind directives on top of your css file
+
+```
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+- Use tailwind somewhere in the application
 
 ## 5 - Prettier
 

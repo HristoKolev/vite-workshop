@@ -87,7 +87,43 @@
         ],
         "pathGroupsExcludedImportTypes": ["builtin", "external"]
       }
-    ]
+    ],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "ForInStatement",
+        "message": "for..in loops iterate over the entire prototype chain, which is virtually never what you want. Use Object.{keys,values,entries}, and iterate over the resulting array."
+      },
+      {
+        "selector": "LabeledStatement",
+        "message": "Labels are a form of GOTO; using them makes code confusing and hard to maintain and understand."
+      },
+      {
+        "selector": "WithStatement",
+        "message": "`with` is disallowed in strict mode because it makes code impossible to predict and optimize."
+      }
+    ],
+    "react/require-default-props": "off",
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": false
+      }
+    ],
+    "react/jsx-props-no-spreading": "off",
+    "no-param-reassign": "off",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "variable",
+        "format": ["camelCase", "PascalCase", "UPPER_CASE"],
+        "leadingUnderscore": "allow"
+      }
+    ],
+    "jsx-a11y/control-has-associated-label": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/no-noninteractive-element-to-interactive-role": "off",
+    "jsx-a11y/click-events-have-key-events": "off"
   },
   "overrides": [
     {
@@ -95,7 +131,21 @@
       "plugins": ["vitest"],
       "extends": ["plugin:vitest/recommended", "plugin:testing-library/react"],
       "rules": {
-        "testing-library/no-wait-for-multiple-assertions": "off"
+        "testing-library/no-wait-for-multiple-assertions": "off",
+        "vitest/expect-expect": "off"
+      }
+    },
+    {
+      "files": ["src/testing/**"],
+      "rules": {
+        "import/no-extraneous-dependencies": [
+          "error",
+          {
+            "devDependencies": true,
+            "optionalDependencies": false,
+            "peerDependencies": false
+          }
+        ]
       }
     }
   ],
