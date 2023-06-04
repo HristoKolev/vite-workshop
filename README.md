@@ -275,4 +275,3 @@ npm run lint -- -- --fix
   },
   "eslint.validate": ["typescript", "typescriptreact"]
 ```
-
