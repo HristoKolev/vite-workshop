@@ -169,8 +169,28 @@ npm i -D tailwindcss
 
 - Use tailwind somewhere in the application
 
-## 5 - Prettier
+## 5 - MUI
 
+```shell
+npm i @mui/material @emotion/react @emotion/styled @fontsource/roboto @mui/icons-material
+```
+
+* import the fonts
+
+```
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+```
+
+* add the MUI baseline component
+
+```jsx
+<CssBaseline />
+```
+
+## 6 - Prettier
 
 - Install the package
 
@@ -203,7 +223,7 @@ npm run fmt
   "prettier.configPath": ".prettierrc"
 ```
 
-## 6 - ESLint
+## 7 - ESLint
 
 - Install the extra packages
 
@@ -255,6 +275,4 @@ npm run lint -- -- --fix
   },
   "eslint.validate": ["typescript", "typescriptreact"]
 ```
-
-
 
