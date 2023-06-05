@@ -1,4 +1,6 @@
-# Vite
+# Vite workshop
+
+TODO: Describe what this is, why it exists and how it should be used.
 
 ## 0 - Create project
 
