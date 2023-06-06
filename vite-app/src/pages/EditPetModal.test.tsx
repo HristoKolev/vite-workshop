@@ -6,7 +6,6 @@ import {
   test,
   vi,
   ExpectStatic,
-  beforeEach,
 } from 'vitest';
 import {
   act,
@@ -19,8 +18,6 @@ import {
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
-
-import { reportError } from '~utils/reportError.ts';
 
 import { mockPetList } from '../testing/mock-data';
 import { defaultHandlers, renderWithProviders } from '../testing/testing-utils';
@@ -36,10 +33,6 @@ const server = setupServer(...defaultHandlers);
 
 beforeAll(() => {
   server.listen();
-});
-
-beforeEach(() => {
-  vi.mocked(reportError).mockReset();
 });
 
 afterEach(() => {
