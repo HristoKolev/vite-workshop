@@ -1,4 +1,4 @@
-import { beforeEach, afterAll, beforeAll, afterEach, test, vi } from 'vitest';
+import { afterAll, beforeAll, afterEach, test, vi } from 'vitest';
 import {
   cleanup,
   screen,
@@ -10,11 +10,14 @@ import userEvent from '@testing-library/user-event';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 
-import { mockPetKinds } from './testing/mock-data';
 import { WaitHandle } from './testing/wait-handle';
 import { App } from './App';
 import { API_URL } from './utils/api-client';
-import { defaultHandlers, renderWithProviders } from './testing/testing-utils';
+import {
+  defaultWaitHandles,
+  defaultHandlers,
+  renderWithProviders,
+} from './testing/testing-utils';
 
 vi.mock('./utils/reportError');
 
@@ -24,17 +27,18 @@ beforeAll(() => {
   server.listen();
 });
 
-beforeEach(() => {
-  server.resetHandlers();
-});
-
 afterEach(() => {
   cleanup();
+  vi.restoreAllMocks();
+  server.resetHandlers();
+  defaultWaitHandles.disableAllHandles();
 });
 
 afterAll(() => {
   server.close();
 });
+
+const { getPetKidsWaitHandle } = defaultWaitHandles;
 
 test('shows app heading', ({ expect }) => {
   renderWithProviders(<App />);
@@ -47,14 +51,7 @@ test('shows app heading', ({ expect }) => {
 test('add pet button is only shown after the first fetch', async ({
   expect,
 }) => {
-  const waitHandle = new WaitHandle();
-
-  server.use(
-    rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
-      await waitHandle.wait();
-      return res(ctx.json(mockPetKinds));
-    })
-  );
+  getPetKidsWaitHandle.enable();
 
   renderWithProviders(<App />);
 
@@ -63,13 +60,13 @@ test('add pet button is only shown after the first fetch', async ({
   ).not.toBeInTheDocument();
 
   const loadingIndicator = await screen.findByTestId('loading-indicator');
-  waitHandle.release();
+  getPetKidsWaitHandle.release();
   await waitForElementToBeRemoved(loadingIndicator);
 
   expect(screen.getByRole('button', { name: 'Add Pet' })).toBeInTheDocument();
 });
 
-test('shows an error indicator when the pets endpoint fails', async ({
+test('shows an error indicator when the all pets endpoint fails', async ({
   expect,
 }) => {
   const waitHandle = new WaitHandle();
@@ -115,20 +112,14 @@ test('shows an error indicator when the pet kinds endpoint fails', async ({
   });
 });
 
+// HRISTO: suspect
 test('displays a list of pets', async ({ expect }) => {
-  const waitHandle = new WaitHandle();
-
-  server.use(
-    rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
-      await waitHandle.wait();
-      return res(ctx.json(mockPetKinds));
-    })
-  );
+  getPetKidsWaitHandle.enable();
 
   renderWithProviders(<App />);
 
   const loadingIndicator = await screen.findByTestId('loading-indicator');
-  waitHandle.release();
+  getPetKidsWaitHandle.release();
   await waitForElementToBeRemoved(loadingIndicator);
 
   const table = await screen.findByRole('table');
@@ -136,6 +127,7 @@ test('displays a list of pets', async ({ expect }) => {
   expect(within(table).getAllByRole('row', { name: 'Pet' })).toHaveLength(3);
 });
 
+// HRISTO: suspect
 test('shows a message when there are no pets', async ({ expect }) => {
   const waitHandle = new WaitHandle();
 
@@ -160,21 +152,14 @@ test('shows a message when there are no pets', async ({ expect }) => {
 });
 
 test('view / edit button brings up the details modal', async ({ expect }) => {
-  const waitHandle = new WaitHandle();
-
-  server.use(
-    rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
-      await waitHandle.wait();
-      return res(ctx.json(mockPetKinds));
-    })
-  );
+  getPetKidsWaitHandle.enable();
 
   const user = userEvent.setup();
 
   renderWithProviders(<App />);
 
   const loadingIndicator = await screen.findByTestId('loading-indicator');
-  waitHandle.release();
+  getPetKidsWaitHandle.release();
   await waitForElementToBeRemoved(loadingIndicator);
 
   const table = await screen.findByRole('table');
@@ -193,21 +178,14 @@ test('view / edit button brings up the details modal', async ({ expect }) => {
 });
 
 test('delete button brings up the delete modal', async ({ expect }) => {
-  const waitHandle = new WaitHandle();
-
-  server.use(
-    rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
-      await waitHandle.wait();
-      return res(ctx.json(mockPetKinds));
-    })
-  );
+  getPetKidsWaitHandle.enable();
 
   const user = userEvent.setup();
 
   renderWithProviders(<App />);
 
   const loadingIndicator = await screen.findByTestId('loading-indicator');
-  waitHandle.release();
+  getPetKidsWaitHandle.release();
   await waitForElementToBeRemoved(loadingIndicator);
 
   const table = await screen.findByRole('table');
@@ -282,21 +260,14 @@ test('clicking the cancel button on the edit modal closes the modal', async ({
 });
 
 test('add buttons brings up the add modal', async ({ expect }) => {
-  const waitHandle = new WaitHandle();
-
-  server.use(
-    rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
-      await waitHandle.wait();
-      return res(ctx.json(mockPetKinds));
-    })
-  );
+  getPetKidsWaitHandle.enable();
 
   const user = userEvent.setup();
 
   renderWithProviders(<App />);
 
   const loadingIndicator = await screen.findByTestId('loading-indicator');
-  waitHandle.release();
+  getPetKidsWaitHandle.release();
   await waitForElementToBeRemoved(loadingIndicator);
 
   const addButton = screen.getByRole('button', { name: 'Add Pet' });
@@ -350,21 +321,14 @@ test('re-fetches the list of pets when a pet is deleted', async ({
 });
 
 test('re-fetches the list of pets when a pet is saved', async ({ expect }) => {
-  const waitHandle = new WaitHandle();
-
-  server.use(
-    rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
-      await waitHandle.wait();
-      return res(ctx.json(mockPetKinds));
-    })
-  );
+  getPetKidsWaitHandle.enable();
 
   const user = userEvent.setup();
 
   renderWithProviders(<App />);
 
   const loadingIndicator = await screen.findByTestId('loading-indicator');
-  waitHandle.release();
+  getPetKidsWaitHandle.release();
   await waitForElementToBeRemoved(loadingIndicator);
 
   const table = await screen.findByRole('table');

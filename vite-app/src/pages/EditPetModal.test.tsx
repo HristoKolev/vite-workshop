@@ -1,11 +1,11 @@
 import {
   afterAll,
-  beforeAll,
   afterEach,
+  beforeAll,
   describe,
+  ExpectStatic,
   test,
   vi,
-  ExpectStatic,
 } from 'vitest';
 import {
   act,
@@ -19,8 +19,11 @@ import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
 
-import { mockPetList } from '../testing/mock-data';
-import { defaultHandlers, renderWithProviders } from '../testing/testing-utils';
+import {
+  defaultHandlers,
+  defaultWaitHandles,
+  renderWithProviders,
+} from '../testing/testing-utils';
 import { createReduxStore } from '../redux/createReduxStore';
 import { fetchPetsData } from '../redux/globalSlice';
 import { EditPetModal } from './EditPetModal';
@@ -39,11 +42,14 @@ afterEach(() => {
   cleanup();
   server.resetHandlers();
   vi.restoreAllMocks();
+  defaultWaitHandles.disableAllHandles();
 });
 
 afterAll(() => {
   server.close();
 });
+
+const { getPetWaitHandle, updatePetWaitHandle } = defaultWaitHandles;
 
 interface RenderEditModalOptions {
   registerHandlers?: () => void;
@@ -185,22 +191,12 @@ const verifyDefaultFieldValues = ({ expect }: { expect: ExpectStatic }) => {
 test('edit modal defaults to view mode when called with a valid pet id', async ({
   expect,
 }) => {
-  const waitHandle = new WaitHandle();
+  getPetWaitHandle.enable();
 
-  await renderEditModal({
-    registerHandlers: () => {
-      server.use(
-        rest.get(`${API_URL}/pet/:petId`, async (req, res, ctx) => {
-          await waitHandle.wait();
-          const petId = Number(req.params.petId);
-          return res(ctx.json(mockPetList.find((x) => x.petId === petId)));
-        })
-      );
-    },
-  });
+  await renderEditModal();
 
   const loadingIndicator = await screen.findByTestId('loading-indicator');
-  waitHandle.release();
+  getPetWaitHandle.release();
   await waitForElementToBeRemoved(loadingIndicator);
 
   await verifyDisplayMode({ expect });
@@ -299,17 +295,9 @@ test('transitions back to display mode when the cancel button is clicked', async
   await verifyDisplayMode({ expect });
 });
 
-test('clicking save transitions the form to display mode', async ({
-  expect,
-}) => {
-  const user = userEvent.setup();
-
-  await renderEditModal();
-
-  const editButton = await screen.findByRole('button', { name: 'Edit' });
-
-  await user.click(editButton);
-
+const changeEditFormFields = async (
+  user: ReturnType<typeof userEvent.setup>
+) => {
   const nameField = screen.getByLabelText('Name:');
   const ageField = screen.getByLabelText('Age:');
   const healthProblemsField = screen.getByLabelText('Health Problems:');
@@ -322,24 +310,27 @@ test('clicking save transitions the form to display mode', async ({
   await user.click(healthProblemsField);
   await user.clear(notesField);
   await user.type(notesField, 'Notes 123');
+};
 
-  const waitHande = new WaitHandle();
+test('clicking save transitions the form to display mode', async ({
+  expect,
+}) => {
+  const user = userEvent.setup();
 
-  server.use(
-    rest.put(`${API_URL}/pet/:petId`, async (req, res, ctx) => {
-      await waitHande.wait();
-      const petId = Number(req.params.petId);
-      const body: Record<string, unknown> = await req.json();
-      return res(ctx.json({ ...body, petId }));
-    })
-  );
+  await renderEditModal();
+
+  await user.click(await screen.findByRole('button', { name: 'Edit' }));
+
+  await changeEditFormFields(user);
+
+  updatePetWaitHandle.enable();
 
   const saveButton = screen.getByRole('button', { name: 'Save' });
 
   await user.click(saveButton);
 
   const loadingIndicator = await screen.findByTestId('loading-indicator');
-  waitHande.release();
+  updatePetWaitHandle.release();
   await waitForElementToBeRemoved(loadingIndicator);
 
   await verifyDisplayMode({ expect });
@@ -385,22 +376,9 @@ test('form is returned to display mode when the cancel button is clicked', async
 
   await renderEditModal();
 
-  const editButton = await screen.findByRole('button', { name: 'Edit' });
+  await user.click(await screen.findByRole('button', { name: 'Edit' }));
 
-  await user.click(editButton);
-
-  const nameField = screen.getByLabelText('Name:');
-  const ageField = screen.getByLabelText('Age:');
-  const healthProblemsField = screen.getByLabelText('Health Problems:');
-  const notesField = screen.getByLabelText('Notes:');
-
-  await user.clear(nameField);
-  await user.type(nameField, 'test123');
-  await user.clear(ageField);
-  await user.type(ageField, '2');
-  await user.click(healthProblemsField);
-  await user.clear(notesField);
-  await user.type(notesField, 'Notes 123');
+  await changeEditFormFields(user);
 
   const cancelButton = screen.getByRole('button', { name: 'Cancel' });
 
@@ -418,22 +396,9 @@ test('cancel button resets the state successfully after failed update request', 
 
   await renderEditModal();
 
-  const editButton = await screen.findByRole('button', { name: 'Edit' });
+  await user.click(await screen.findByRole('button', { name: 'Edit' }));
 
-  await user.click(editButton);
-
-  const nameField = screen.getByLabelText('Name:');
-  const ageField = screen.getByLabelText('Age:');
-  const healthProblemsField = screen.getByLabelText('Health Problems:');
-  const notesField = screen.getByLabelText('Notes:');
-
-  await user.clear(nameField);
-  await user.type(nameField, 'test123');
-  await user.clear(ageField);
-  await user.type(ageField, '2');
-  await user.click(healthProblemsField);
-  await user.clear(notesField);
-  await user.type(notesField, 'Notes 123');
+  await changeEditFormFields(user);
 
   const waitHandle = new WaitHandle();
 
@@ -506,6 +471,26 @@ test('will not submit data if input validation fails', async ({ expect }) => {
 });
 
 describe('add mode', () => {
+  const fillForm = async (user: ReturnType<typeof userEvent.setup>) => {
+    const nameField = screen.getByLabelText('Name:');
+    const kindField = screen.getByLabelText('Kind:');
+    const ageField = screen.getByLabelText('Age:');
+    const healthProblemsField = screen.getByLabelText('Health Problems:');
+    const addedDateField = screen.getByLabelText('Added Date:');
+    const notesField = screen.getByLabelText('Notes:');
+
+    await user.clear(nameField);
+    await user.type(nameField, 'test123');
+    await user.selectOptions(kindField, ['Cat']);
+    await user.clear(ageField);
+    await user.type(ageField, '2');
+    await user.click(healthProblemsField);
+    await user.clear(addedDateField);
+    await user.type(addedDateField, '2023-10-10');
+    await user.clear(notesField);
+    await user.type(notesField, 'Notes 123');
+  };
+
   test('error indicator is shown when the add request fails', async ({
     expect,
   }) => {
@@ -527,23 +512,7 @@ describe('add mode', () => {
 
     verifyAddMode({ expect });
 
-    const nameField = screen.getByLabelText('Name:');
-    const kindField = screen.getByLabelText('Kind:');
-    const ageField = screen.getByLabelText('Age:');
-    const healthProblemsField = screen.getByLabelText('Health Problems:');
-    const addedDateField = screen.getByLabelText('Added Date:');
-    const notesField = screen.getByLabelText('Notes:');
-
-    await user.clear(nameField);
-    await user.type(nameField, 'test123');
-    await user.selectOptions(kindField, ['Cat']);
-    await user.clear(ageField);
-    await user.type(ageField, '2');
-    await user.click(healthProblemsField);
-    await user.clear(addedDateField);
-    await user.type(addedDateField, '2023-10-10');
-    await user.clear(notesField);
-    await user.type(notesField, 'Notes 123');
+    await fillForm(user);
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
 
@@ -569,23 +538,7 @@ describe('add mode', () => {
 
     verifyAddMode({ expect });
 
-    const nameField = screen.getByLabelText('Name:');
-    const kindField = screen.getByLabelText('Kind:');
-    const ageField = screen.getByLabelText('Age:');
-    const healthProblemsField = screen.getByLabelText('Health Problems:');
-    const addedDateField = screen.getByLabelText('Added Date:');
-    const notesField = screen.getByLabelText('Notes:');
-
-    await user.clear(nameField);
-    await user.type(nameField, 'test123');
-    await user.selectOptions(kindField, ['Cat']);
-    await user.clear(ageField);
-    await user.type(ageField, '2');
-    await user.click(healthProblemsField);
-    await user.clear(addedDateField);
-    await user.type(addedDateField, '2023-10-10');
-    await user.clear(notesField);
-    await user.type(notesField, 'Notes 123');
+    await fillForm(user);
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
 

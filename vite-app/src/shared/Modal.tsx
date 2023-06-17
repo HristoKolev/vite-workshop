@@ -1,4 +1,4 @@
-import { memo, ReactNode, useCallback } from 'react';
+import { memo, ReactNode, useCallback, JSX } from 'react';
 import { createPortal } from 'react-dom';
 
 import './Modal.css';

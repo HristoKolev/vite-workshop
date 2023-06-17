@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, JSX } from 'react';
 
 import './LoadingIndicator.css';
 

@@ -5,6 +5,7 @@ import {
   useEffect,
   useRef,
   useState,
+  JSX,
 } from 'react';
 
 import { Modal } from '../shared/Modal';

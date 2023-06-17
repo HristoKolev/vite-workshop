@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo, useCallback, JSX } from 'react';
 
 import { Modal } from '../shared/Modal';
 import { PetListItem } from '../utils/server-data-model';

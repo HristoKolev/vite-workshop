@@ -1,4 +1,4 @@
-import { memo, MouseEvent, useCallback } from 'react';
+import { memo, MouseEvent, useCallback, JSX } from 'react';
 
 import { useAppSelector } from '../redux/createReduxStore';
 import { globalSelector } from '../redux/globalSlice';

@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState, JSX } from 'react';
 
 import { PetListItem } from './utils/server-data-model';
 import { ErrorIndicator } from './shared/ErrorIndicator';

@@ -6,6 +6,7 @@ import { Modal } from './Modal';
 
 afterEach(() => {
   cleanup();
+  vi.restoreAllMocks();
 });
 
 test('clicking on the X button calls onClose', async ({ expect }) => {

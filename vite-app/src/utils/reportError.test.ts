@@ -1,6 +1,10 @@
-import { test, vi } from 'vitest';
+import { afterEach, test, vi } from 'vitest';
 
 import { reportError } from './reportError';
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 test('logs the error to the console', ({ expect }) => {
   // eslint-disable-next-line no-console

@@ -110,7 +110,7 @@ npm i -D source-map-explorer
 ## 3 - Vitest
 
 ```shell
-npm i -D vitest @vitest/coverage-c8
+npm i -D vitest @vitest/coverage-v8
 npm i -D @testing-library/dom @testing-library/react @testing-library/user-event @testing-library/jest-dom jsdom 
 npm i -D msw node-fetch@2
 ```
@@ -129,10 +129,10 @@ test: {
   setupFiles: ['./setupTests.ts'],
   coverage: {
     enabled: true,
-    provider: 'c8',
+    provider: 'v8',
     all: true,
-    src: ['src'],
-    exclude: [...configDefaults.coverage.exclude, 'main.tsx'],
+    include: ['**/src/**'],
+    exclude: [...configDefaults.coverage.exclude, 'src/main.tsx'],
     lines: 90,
     statements: 90,
     functions: 90,
