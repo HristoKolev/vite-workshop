@@ -1,46 +1,26 @@
-import { afterAll, beforeAll, afterEach, test, vi } from 'vitest';
-import { setupServer } from 'msw/node';
-import { rest } from 'msw';
-import { act, cleanup, screen, within } from '@testing-library/react';
+import { afterEach, test, vi } from 'vitest';
+import { cleanup, render, screen, within } from '@testing-library/react';
 
-import { defaultHandlers, renderWithProviders } from '../testing/testing-utils';
-import { API_URL } from '../utils/api-client';
+import { mockPetList } from '~testing/mock-data.ts';
+
 import { PetList } from './PetList';
-import { createReduxStore } from '../redux/createReduxStore';
-import { fetchPetsData } from '../redux/globalSlice';
 
 vi.mock('../utils/reportError');
 
-const server = setupServer(...defaultHandlers);
-
-beforeAll(() => {
-  server.listen();
-});
-
 afterEach(() => {
   cleanup();
-  server.resetHandlers();
   vi.restoreAllMocks();
 });
 
-afterAll(() => {
-  server.close();
-});
-
 test('shows a message when there are no pets', async ({ expect }) => {
-  server.use(
-    rest.get(`${API_URL}/pet/all`, async (_req, res, ctx) => res(ctx.json([])))
+  render(
+    <PetList
+      petList={[]}
+      petKindsByValue={{}}
+      onEdit={vi.fn}
+      onDelete={vi.fn}
+    />
   );
-
-  const store = createReduxStore();
-
-  await act(async () => {
-    await store.dispatch(fetchPetsData()).unwrap();
-  });
-
-  renderWithProviders(<PetList onEdit={vi.fn} onDelete={vi.fn} />, {
-    store,
-  });
 
   const table = await screen.findByRole('table');
 
@@ -50,18 +30,22 @@ test('shows a message when there are no pets', async ({ expect }) => {
 });
 
 test('row shows pet list item data', async ({ expect }) => {
-  const store = createReduxStore();
+  const petKindsByValue = {
+    1: { displayName: 'Cat', value: 1 },
+    2: { displayName: 'Dog', value: 2 },
+    3: { displayName: 'Parrot', value: 3 },
+  };
 
-  await act(async () => {
-    await store.dispatch(fetchPetsData()).unwrap();
-  });
-
-  renderWithProviders(<PetList onEdit={vi.fn} onDelete={vi.fn} />, {
-    store,
-  });
+  render(
+    <PetList
+      petList={mockPetList}
+      petKindsByValue={petKindsByValue}
+      onEdit={vi.fn}
+      onDelete={vi.fn}
+    />
+  );
 
   const table = await screen.findByRole('table');
-
   const row = within(table).getAllByRole('row', { name: 'Pet' })[0];
 
   expect(within(row).getByTestId('col_petId')).toHaveTextContent('42');

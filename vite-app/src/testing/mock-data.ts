@@ -33,16 +33,7 @@ export const mockPetList = [
 ];
 
 export const mockPetKinds = [
-  {
-    displayName: 'Cat',
-    value: 1,
-  },
-  {
-    displayName: 'Dog',
-    value: 2,
-  },
-  {
-    displayName: 'Parrot',
-    value: 3,
-  },
+  { displayName: 'Cat', value: 1 },
+  { displayName: 'Dog', value: 2 },
+  { displayName: 'Parrot', value: 3 },
 ];

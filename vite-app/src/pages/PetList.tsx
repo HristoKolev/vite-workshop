@@ -1,15 +1,8 @@
 import { memo, MouseEvent, useCallback, JSX } from 'react';
 
-import { useAppSelector } from '../redux/createReduxStore';
-import { globalSelector } from '../redux/globalSlice';
+import { PetKind, PetListItem } from '~utils/server-data-model.ts';
 
 import './PetList.css';
-
-interface PetsListProps {
-  onEdit: (petId: number) => void;
-
-  onDelete: (petId: number) => void;
-}
 
 const formatDate = (date: string): string =>
   new Date(`${date}T00:00:00`).toLocaleDateString('en-GB', {
@@ -18,10 +11,23 @@ const formatDate = (date: string): string =>
     year: 'numeric',
   });
 
-export const PetList = memo(
-  ({ onEdit, onDelete }: PetsListProps): JSX.Element => {
-    const { petList, petKindsByValue } = useAppSelector(globalSelector);
+interface PetsListProps {
+  onEdit: (petId: number) => void;
 
+  onDelete: (petId: number) => void;
+
+  petKindsByValue: Record<number, PetKind | undefined>;
+
+  petList: PetListItem[];
+}
+
+export const PetList = memo(
+  ({
+    onEdit,
+    onDelete,
+    petList,
+    petKindsByValue,
+  }: PetsListProps): JSX.Element => {
     const handleOnDeleteClick = useCallback(
       (ev: MouseEvent) => {
         const button = ev.target as HTMLButtonElement;

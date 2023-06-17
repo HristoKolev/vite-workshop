@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, afterEach, test, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, test, vi, describe } from 'vitest';
 import {
   cleanup,
   screen,
@@ -14,8 +14,8 @@ import { WaitHandle } from './testing/wait-handle';
 import { App } from './App';
 import { API_URL } from './utils/api-client';
 import {
-  defaultWaitHandles,
   defaultHandlers,
+  defaultWaitHandles,
   renderWithProviders,
 } from './testing/testing-utils';
 
@@ -40,340 +40,268 @@ afterAll(() => {
 
 const { getPetKidsWaitHandle } = defaultWaitHandles;
 
-test('shows app heading', ({ expect }) => {
-  renderWithProviders(<App />);
+describe('landing page', () => {
+  test('shows app heading', ({ expect }) => {
+    renderWithProviders(<App />);
 
-  expect(
-    screen.getByRole('heading', { name: 'Pet Store' })
-  ).toBeInTheDocument();
-});
-
-test('add pet button is only shown after the first fetch', async ({
-  expect,
-}) => {
-  getPetKidsWaitHandle.enable();
-
-  renderWithProviders(<App />);
-
-  expect(
-    screen.queryByRole('button', { name: 'Add Pet' })
-  ).not.toBeInTheDocument();
-
-  const loadingIndicator = await screen.findByTestId('loading-indicator');
-  getPetKidsWaitHandle.release();
-  await waitForElementToBeRemoved(loadingIndicator);
-
-  expect(screen.getByRole('button', { name: 'Add Pet' })).toBeInTheDocument();
-});
-
-test('shows an error indicator when the all pets endpoint fails', async ({
-  expect,
-}) => {
-  const waitHandle = new WaitHandle();
-
-  server.use(
-    rest.get(`${API_URL}/pet/all`, async (_req, res, ctx) => {
-      await waitHandle.wait();
-      return res(ctx.status(500));
-    })
-  );
-
-  renderWithProviders(<App />);
-
-  const loadingIndicator = await screen.findByTestId('loading-indicator');
-  waitHandle.release();
-  await waitForElementToBeRemoved(loadingIndicator);
-
-  await waitFor(() => {
-    expect(screen.getByTestId('error-indicator')).toBeInTheDocument();
-  });
-});
-
-test('shows an error indicator when the pet kinds endpoint fails', async ({
-  expect,
-}) => {
-  const waitHandle = new WaitHandle();
-
-  server.use(
-    rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
-      await waitHandle.wait();
-      return res(ctx.status(500));
-    })
-  );
-
-  renderWithProviders(<App />);
-
-  const loadingIndicator = await screen.findByTestId('loading-indicator');
-  waitHandle.release();
-  await waitForElementToBeRemoved(loadingIndicator);
-
-  await waitFor(() => {
-    expect(screen.getByTestId('error-indicator')).toBeInTheDocument();
-  });
-});
-
-// HRISTO: suspect
-test('displays a list of pets', async ({ expect }) => {
-  getPetKidsWaitHandle.enable();
-
-  renderWithProviders(<App />);
-
-  const loadingIndicator = await screen.findByTestId('loading-indicator');
-  getPetKidsWaitHandle.release();
-  await waitForElementToBeRemoved(loadingIndicator);
-
-  const table = await screen.findByRole('table');
-
-  expect(within(table).getAllByRole('row', { name: 'Pet' })).toHaveLength(3);
-});
-
-// HRISTO: suspect
-test('shows a message when there are no pets', async ({ expect }) => {
-  const waitHandle = new WaitHandle();
-
-  server.use(
-    rest.get(`${API_URL}/pet/all`, async (_req, res, ctx) => {
-      await waitHandle.wait();
-      return res(ctx.json([]));
-    })
-  );
-
-  renderWithProviders(<App />);
-
-  const loadingIndicator = await screen.findByTestId('loading-indicator');
-  waitHandle.release();
-  await waitForElementToBeRemoved(loadingIndicator);
-
-  const table = await screen.findByRole('table');
-
-  expect(within(table).queryAllByRole('row', { name: 'Pet' })).toHaveLength(0);
-
-  expect(screen.getByText('No items.')).toBeInTheDocument();
-});
-
-test('view / edit button brings up the details modal', async ({ expect }) => {
-  getPetKidsWaitHandle.enable();
-
-  const user = userEvent.setup();
-
-  renderWithProviders(<App />);
-
-  const loadingIndicator = await screen.findByTestId('loading-indicator');
-  getPetKidsWaitHandle.release();
-  await waitForElementToBeRemoved(loadingIndicator);
-
-  const table = await screen.findByRole('table');
-
-  const row = within(table).getAllByRole('row', { name: 'Pet' })[0];
-
-  const editButton = within(row).getByRole('button', { name: 'View / Edit' });
-
-  await user.click(editButton);
-
-  await waitFor(() => {
     expect(
-      screen.getByRole('dialog', { name: 'View / Edit pet modal' })
+      screen.getByRole('heading', { name: 'Pet Store' })
     ).toBeInTheDocument();
   });
-});
 
-test('delete button brings up the delete modal', async ({ expect }) => {
-  getPetKidsWaitHandle.enable();
+  test('add pet button is only shown after the first fetch', async ({
+    expect,
+  }) => {
+    getPetKidsWaitHandle.enable();
 
-  const user = userEvent.setup();
+    renderWithProviders(<App />);
 
-  renderWithProviders(<App />);
-
-  const loadingIndicator = await screen.findByTestId('loading-indicator');
-  getPetKidsWaitHandle.release();
-  await waitForElementToBeRemoved(loadingIndicator);
-
-  const table = await screen.findByRole('table');
-
-  const row = within(table).getAllByRole('row', { name: 'Pet' })[0];
-
-  const deleteButton = within(row).getByRole('button', { name: 'Delete' });
-
-  await user.click(deleteButton);
-
-  await waitFor(() => {
     expect(
-      screen.getByRole('dialog', { name: 'Delete pet modal' })
-    ).toBeInTheDocument();
-  });
-});
-
-test('clicking the cancel button on the delete modal closes the modal', async ({
-  expect,
-}) => {
-  const user = userEvent.setup();
-
-  renderWithProviders(<App />);
-
-  const table = await screen.findByRole('table');
-
-  const row = within(table).getAllByRole('row', { name: 'Pet' })[0];
-
-  const deleteButton = within(row).getByRole('button', { name: 'Delete' });
-
-  await user.click(deleteButton);
-
-  const deleteModal = await screen.findByRole('dialog', {
-    name: 'Delete pet modal',
-  });
-
-  await user.click(within(deleteModal).getByRole('button', { name: 'Cancel' }));
-
-  await waitFor(() => {
-    expect(
-      screen.queryByRole('dialog', { name: 'Delete pet modal' })
+      screen.queryByRole('button', { name: 'Add Pet' })
     ).not.toBeInTheDocument();
+
+    const loadingIndicator = await screen.findByTestId('loading-indicator');
+    getPetKidsWaitHandle.release();
+    await waitForElementToBeRemoved(loadingIndicator);
+
+    expect(screen.getByRole('button', { name: 'Add Pet' })).toBeInTheDocument();
+  });
+
+  test('displays a list of pets', async ({ expect }) => {
+    getPetKidsWaitHandle.enable();
+
+    renderWithProviders(<App />);
+
+    const loadingIndicator = await screen.findByTestId('loading-indicator');
+    getPetKidsWaitHandle.release();
+    await waitForElementToBeRemoved(loadingIndicator);
+
+    const table = await screen.findByRole('table');
+
+    expect(within(table).getAllByRole('row', { name: 'Pet' })).toHaveLength(3);
+  });
+
+  test('shows an error indicator when the all pets endpoint fails', async ({
+    expect,
+  }) => {
+    const waitHandle = new WaitHandle();
+
+    server.use(
+      rest.get(`${API_URL}/pet/all`, async (_req, res, ctx) => {
+        await waitHandle.wait();
+        return res(ctx.status(500));
+      })
+    );
+
+    renderWithProviders(<App />);
+
+    const loadingIndicator = await screen.findByTestId('loading-indicator');
+    waitHandle.release();
+    await waitForElementToBeRemoved(loadingIndicator);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('error-indicator')).toBeInTheDocument();
+    });
+  });
+
+  test('shows an error indicator when the pet kinds endpoint fails', async ({
+    expect,
+  }) => {
+    const waitHandle = new WaitHandle();
+
+    server.use(
+      rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
+        await waitHandle.wait();
+        return res(ctx.status(500));
+      })
+    );
+
+    renderWithProviders(<App />);
+
+    const loadingIndicator = await screen.findByTestId('loading-indicator');
+    waitHandle.release();
+    await waitForElementToBeRemoved(loadingIndicator);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('error-indicator')).toBeInTheDocument();
+    });
   });
 });
 
-test('clicking the cancel button on the edit modal closes the modal', async ({
-  expect,
-}) => {
-  const user = userEvent.setup();
+describe('modals', () => {
+  test('view / edit button brings up the details modal and cancel closes it', async ({
+    expect,
+  }) => {
+    const user = userEvent.setup();
 
-  renderWithProviders(<App />);
+    renderWithProviders(<App />);
 
-  const table = await screen.findByRole('table');
+    const petsTable = await screen.findByRole('table');
+    const petRow = within(petsTable).getAllByRole('row', { name: 'Pet' })[0];
 
-  const row = within(table).getAllByRole('row', { name: 'Pet' })[0];
+    await user.click(
+      within(petRow).getByRole('button', { name: 'View / Edit' })
+    );
 
-  const editButton = within(row).getByRole('button', { name: 'View / Edit' });
+    const editModal = await screen.findByRole('dialog', {
+      name: 'View / Edit pet modal',
+    });
 
-  await user.click(editButton);
+    expect(editModal).toBeInTheDocument();
 
-  const deleteModal = await screen.findByRole('dialog', {
-    name: 'View / Edit pet modal',
+    await user.click(within(editModal).getByRole('button', { name: 'Cancel' }));
+
+    await waitFor(() => {
+      expect(editModal).not.toBeInTheDocument();
+    });
   });
 
-  await user.click(within(deleteModal).getByRole('button', { name: 'Cancel' }));
+  test('delete button brings up the delete modal and cancel closes it', async ({
+    expect,
+  }) => {
+    const user = userEvent.setup();
 
-  await waitFor(() => {
-    expect(
-      screen.queryByRole('dialog', { name: 'View / Edit pet modal' })
-    ).not.toBeInTheDocument();
-  });
-});
+    renderWithProviders(<App />);
 
-test('add buttons brings up the add modal', async ({ expect }) => {
-  getPetKidsWaitHandle.enable();
+    const petsTable = await screen.findByRole('table');
+    const petRow = within(petsTable).getAllByRole('row', { name: 'Pet' })[0];
 
-  const user = userEvent.setup();
+    await user.click(within(petRow).getByRole('button', { name: 'Delete' }));
 
-  renderWithProviders(<App />);
+    const deleteModal = await screen.findByRole('dialog', {
+      name: 'Delete pet modal',
+    });
 
-  const loadingIndicator = await screen.findByTestId('loading-indicator');
-  getPetKidsWaitHandle.release();
-  await waitForElementToBeRemoved(loadingIndicator);
+    expect(deleteModal).toBeInTheDocument();
 
-  const addButton = screen.getByRole('button', { name: 'Add Pet' });
+    await user.click(
+      within(deleteModal).getByRole('button', { name: 'Cancel' })
+    );
 
-  await user.click(addButton);
-
-  await waitFor(() => {
-    expect(
-      screen.getByRole('dialog', { name: 'Add pet modal' })
-    ).toBeInTheDocument();
-  });
-});
-
-test('re-fetches the list of pets when a pet is deleted', async ({
-  expect,
-}) => {
-  const user = userEvent.setup();
-
-  renderWithProviders(<App />);
-
-  const table = await screen.findByRole('table');
-  const row = within(table).getAllByRole('row', { name: 'Pet' })[0];
-  const deleteButton = within(row).getByRole('button', { name: 'Delete' });
-  await user.click(deleteButton);
-
-  const confirmButton = await screen.findByRole('button', { name: 'Confirm' });
-
-  const onPetListEndpoint = vi.fn();
-  const onPetKindsEndpoint = vi.fn();
-
-  server.use(
-    rest.get(`${API_URL}/pet/all`, async (_req, res, ctx) => {
-      onPetListEndpoint();
-      return res(ctx.json([]));
-    }),
-    rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
-      onPetKindsEndpoint();
-      return res(ctx.json([]));
-    })
-  );
-
-  await user.click(confirmButton);
-
-  await waitFor(() => {
-    expect(onPetListEndpoint).toBeCalled();
+    await waitFor(() => {
+      expect(deleteModal).not.toBeInTheDocument();
+    });
   });
 
-  await waitFor(() => {
-    expect(onPetKindsEndpoint).not.toBeCalled();
+  test('add buttons brings up the add modal and cancel closes it', async ({
+    expect,
+  }) => {
+    const user = userEvent.setup();
+
+    renderWithProviders(<App />);
+
+    const addButton = await screen.findByRole('button', { name: 'Add Pet' });
+
+    await user.click(addButton);
+
+    const addModal = await screen.findByRole('dialog', {
+      name: 'Add pet modal',
+    });
+
+    expect(addModal).toBeInTheDocument();
+
+    await user.click(within(addModal).getByRole('button', { name: 'Cancel' }));
+
+    await waitFor(() => {
+      expect(addModal).not.toBeInTheDocument();
+    });
   });
 });
 
-test('re-fetches the list of pets when a pet is saved', async ({ expect }) => {
-  getPetKidsWaitHandle.enable();
+describe('re-fresh pet list', () => {
+  test('re-fetches the list of pets when a pet is deleted', async ({
+    expect,
+  }) => {
+    const user = userEvent.setup();
 
-  const user = userEvent.setup();
+    renderWithProviders(<App />);
 
-  renderWithProviders(<App />);
+    const table = await screen.findByRole('table');
+    const row = within(table).getAllByRole('row', { name: 'Pet' })[0];
 
-  const loadingIndicator = await screen.findByTestId('loading-indicator');
-  getPetKidsWaitHandle.release();
-  await waitForElementToBeRemoved(loadingIndicator);
+    await user.click(within(row).getByRole('button', { name: 'Delete' }));
 
-  const table = await screen.findByRole('table');
+    const deleteModal = await screen.findByRole('dialog', {
+      name: 'Delete pet modal',
+    });
 
-  const row = within(table).getAllByRole('row', { name: 'Pet' })[0];
+    const onPetListEndpoint = vi.fn();
+    const onPetKindsEndpoint = vi.fn();
 
-  await user.click(within(row).getByRole('button', { name: 'View / Edit' }));
+    server.use(
+      rest.get(`${API_URL}/pet/all`, async (_req, res, ctx) => {
+        onPetListEndpoint();
+        return res(ctx.json([]));
+      }),
+      rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
+        onPetKindsEndpoint();
+        return res(ctx.json([]));
+      })
+    );
 
-  const editModal = await screen.findByRole('dialog', {
-    name: 'View / Edit pet modal',
+    await user.click(
+      await within(deleteModal).findByRole('button', { name: 'Confirm' })
+    );
+
+    await waitFor(() => {
+      expect(onPetListEndpoint).toBeCalled();
+    });
+
+    await waitFor(() => {
+      expect(onPetKindsEndpoint).not.toBeCalled();
+    });
   });
 
-  await user.click(within(editModal).getByRole('button', { name: 'Edit' }));
+  test('re-fetches the list of pets when a pet is saved', async ({
+    expect,
+  }) => {
+    const user = userEvent.setup();
 
-  await waitFor(() => {
-    expect(
-      within(editModal).getByRole('heading', { name: 'Edit pet' })
-    ).toBeInTheDocument();
-  });
+    renderWithProviders(<App />);
 
-  await user.type(within(editModal).getByLabelText('Name:'), '_new');
+    const table = await screen.findByRole('table');
+    const row = within(table).getAllByRole('row', { name: 'Pet' })[0];
 
-  const onPetListEndpoint = vi.fn();
-  const onPetKindsEndpoint = vi.fn();
+    await user.click(within(row).getByRole('button', { name: 'View / Edit' }));
 
-  server.use(
-    rest.get(`${API_URL}/pet/all`, async (_req, res, ctx) => {
-      onPetListEndpoint();
-      return res(ctx.json([]));
-    }),
-    rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
-      onPetKindsEndpoint();
-      return res(ctx.json([]));
-    })
-  );
+    const editModal = await screen.findByRole('dialog', {
+      name: 'View / Edit pet modal',
+    });
 
-  await user.click(
-    await within(editModal).findByRole('button', { name: 'Save' })
-  );
+    await user.click(within(editModal).getByRole('button', { name: 'Edit' }));
 
-  await waitFor(() => {
-    expect(onPetListEndpoint).toBeCalled();
-  });
+    await waitFor(() => {
+      expect(
+        within(editModal).getByRole('heading', { name: 'Edit pet' })
+      ).toBeInTheDocument();
+    });
 
-  await waitFor(() => {
-    expect(onPetKindsEndpoint).not.toBeCalled();
+    await user.type(within(editModal).getByLabelText('Name:'), '_new');
+
+    const onPetListEndpoint = vi.fn();
+    const onPetKindsEndpoint = vi.fn();
+
+    server.use(
+      rest.get(`${API_URL}/pet/all`, async (_req, res, ctx) => {
+        onPetListEndpoint();
+        return res(ctx.json([]));
+      }),
+      rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
+        onPetKindsEndpoint();
+        return res(ctx.json([]));
+      })
+    );
+
+    await user.click(
+      await within(editModal).findByRole('button', { name: 'Save' })
+    );
+
+    await waitFor(() => {
+      expect(onPetListEndpoint).toBeCalled();
+    });
+
+    await waitFor(() => {
+      expect(onPetKindsEndpoint).not.toBeCalled();
+    });
   });
 });

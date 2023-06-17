@@ -17,8 +17,14 @@ import './App.css';
 
 export const App = memo((): JSX.Element => {
   const dispatch = useAppDispatch();
-  const { petListById, petKinds, isError, isLoading } =
-    useAppSelector(globalSelector);
+  const {
+    petListById,
+    petKinds,
+    petKindsByValue,
+    petList,
+    isError,
+    isLoading,
+  } = useAppSelector(globalSelector);
 
   const fetchListData = useCallback(() => {
     void dispatch(fetchPetsData());
@@ -78,8 +84,13 @@ export const App = memo((): JSX.Element => {
       <div className="pet-list-page-content">
         {isError && <ErrorIndicator />}
         {isLoading && <LoadingIndicator />}
-        {!isLoading && !isError && (
-          <PetList onEdit={handleOnEditClick} onDelete={handleOnDeleteClick} />
+        {!isLoading && !isError && petKindsByValue && petList && (
+          <PetList
+            petList={petList}
+            petKindsByValue={petKindsByValue}
+            onEdit={handleOnEditClick}
+            onDelete={handleOnDeleteClick}
+          />
         )}
         {deletePet && (
           <DeletePetModal
