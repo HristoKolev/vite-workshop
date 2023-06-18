@@ -54,6 +54,18 @@ preview: {
   "start": "vite",
 ```
 
+- Add the `typecheck` script
+
+```
+  "typecheck": "tsc",
+```
+
+- Change the `build` script to use it
+
+```
+  "build": "npm run typecheck && vite build",
+```
+
 - Install some library from npm that you want to use
 
 ```shell
@@ -112,7 +124,7 @@ npm i -D source-map-explorer
 ## 3 - Vitest
 
 ```shell
-npm i -D vitest @vitest/coverage-c8
+npm i -D vitest @vitest/coverage-istanbul
 npm i -D @testing-library/dom @testing-library/react @testing-library/user-event @testing-library/jest-dom jsdom 
 npm i -D msw node-fetch@2
 ```
@@ -131,10 +143,10 @@ test: {
   setupFiles: ['./setupTests.ts'],
   coverage: {
     enabled: true,
-    provider: 'c8',
+    provider: 'istanbul',
     all: true,
-    src: ['src'],
-    exclude: [...configDefaults.coverage.exclude, 'main.tsx'],
+    include: ['**/src/**'],
+    exclude: [...configDefaults.coverage.exclude, 'src/main.tsx'],
     lines: 90,
     statements: 90,
     functions: 90,
@@ -249,22 +261,17 @@ npm i -D eslint-plugin-testing-library
 
 - Remove the existing `lint` script
 
-- Add the npm script
+- Add the npm scripts
 
 ```
 "lint": "eslint ./ --max-warnings 0",
+"lint-fix": "npm run lint -- --fix"
 ```
 
 - Modify the build npm script
  
 ```
-"build": "npm run lint && tsc && vite build",
-```
-
-- Run the lint script with `--fix`
-
-```shell
-npm run lint -- -- --fix
+"build": "npm run lint && npm run typecheck && vite build",
 ```
 
 - Demonstrate WebStorm config

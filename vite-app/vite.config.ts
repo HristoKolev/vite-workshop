@@ -26,10 +26,10 @@ export default defineConfig({
     setupFiles: ['./setupTests.ts'],
     coverage: {
       enabled: true,
-      provider: 'c8',
+      provider: 'istanbul',
       all: true,
-      src: ['src'],
-      exclude: [...configDefaults.coverage.exclude, 'main.tsx'],
+      include: ['**/src/**'],
+      exclude: [...configDefaults.coverage.exclude, 'src/main.tsx'],
       lines: 90,
       statements: 90,
       functions: 90,
