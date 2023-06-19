@@ -1,6 +1,6 @@
 import { memo, MouseEvent, useCallback, JSX } from 'react';
 
-import { PetKind, PetListItem } from '~utils/server-data-model.ts';
+import { PetListItem } from '~utils/server-data-model.ts';
 
 import './PetList.css';
 
@@ -16,7 +16,7 @@ interface PetsListProps {
 
   onDelete: (petId: number) => void;
 
-  petKindsByValue: Record<number, PetKind | undefined>;
+  petKindsByValue: Map<number, string>;
 
   petList: PetListItem[];
 }
@@ -90,7 +90,7 @@ export const PetList = memo(
                   {formatDate(pet.addedDate)}
                 </td>
                 <td className="custom-table-cell" data-testid="col_petKind">
-                  {petKindsByValue?.[pet.kind]?.displayName}
+                  {petKindsByValue.get(pet.kind) || ''}
                 </td>
                 <td className="custom-table-cell">
                   <button

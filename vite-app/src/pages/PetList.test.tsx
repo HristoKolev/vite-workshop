@@ -1,7 +1,7 @@
 import { afterEach, test, vi } from 'vitest';
 import { cleanup, render, screen, within } from '@testing-library/react';
 
-import { mockPetList } from '~testing/mock-data.ts';
+import { mockPetKindsByValue, mockPetList } from '~testing/mock-data.ts';
 
 import { PetList } from './PetList';
 
@@ -16,7 +16,7 @@ test('shows a message when there are no pets', async ({ expect }) => {
   render(
     <PetList
       petList={[]}
-      petKindsByValue={{}}
+      petKindsByValue={mockPetKindsByValue}
       onEdit={vi.fn}
       onDelete={vi.fn}
     />
@@ -30,16 +30,10 @@ test('shows a message when there are no pets', async ({ expect }) => {
 });
 
 test('row shows pet list item data', async ({ expect }) => {
-  const petKindsByValue = {
-    1: { displayName: 'Cat', value: 1 },
-    2: { displayName: 'Dog', value: 2 },
-    3: { displayName: 'Parrot', value: 3 },
-  };
-
   render(
     <PetList
       petList={mockPetList}
-      petKindsByValue={petKindsByValue}
+      petKindsByValue={mockPetKindsByValue}
       onEdit={vi.fn}
       onDelete={vi.fn}
     />

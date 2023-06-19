@@ -37,3 +37,8 @@ export const mockPetKinds = [
   { displayName: 'Dog', value: 2 },
   { displayName: 'Parrot', value: 3 },
 ];
+
+export const mockPetKindsByValue = new Map<number, string>();
+mockPetKindsByValue.set(1, 'Cat');
+mockPetKindsByValue.set(2, 'Dog');
+mockPetKindsByValue.set(3, 'Parrot');

@@ -1,30 +1,9 @@
-import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import { RequestHandler, rest } from 'msw';
-import { ReactElement } from 'react';
-import { Provider } from 'react-redux';
 
 import { createWaitHandleCollection } from '~testing/wait-handle.ts';
 
-import { createReduxStore, ReduxStoreType } from '../redux/createReduxStore';
 import { API_URL } from '../utils/api-client';
 import { mockPetKinds, mockPetList } from './mock-data';
-
-type ExtendedRenderOptions = Omit<RenderOptions, 'queries'> & {
-  store?: ReduxStoreType;
-};
-
-export const renderWithProviders = (
-  ui: ReactElement,
-  options?: ExtendedRenderOptions
-): RenderResult => {
-  const store = options?.store || createReduxStore();
-  let restOptions;
-  if (options) {
-    const { store: _store, ...restOpt } = options;
-    restOptions = restOpt;
-  }
-  return render(<Provider store={store}>{ui}</Provider>, restOptions);
-};
 
 export const defaultWaitHandles = createWaitHandleCollection<
   | 'getAllPets'

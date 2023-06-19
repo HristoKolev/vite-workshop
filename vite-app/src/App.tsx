@@ -1,42 +1,70 @@
-import { memo, useCallback, useEffect, useState, JSX } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 
-import { PetListItem } from './utils/server-data-model';
+import { getPetKinds, getPetList } from './utils/api-client';
+import { PetKind, PetListItem } from './utils/server-data-model';
 import { ErrorIndicator } from './shared/ErrorIndicator';
 import { LoadingIndicator } from './shared/LoadingIndicator';
 import { DeletePetModal } from './pages/DeletePetModal';
 import { EditPetModal } from './pages/EditPetModal';
 import { PetList } from './pages/PetList';
-import { useAppDispatch, useAppSelector } from './redux/createReduxStore';
-import {
-  fetchPetsData,
-  globalActions,
-  globalSelector,
-} from './redux/globalSlice';
+import { reportError } from './utils/reportError';
 
 import './App.css';
 
 export const App = memo((): JSX.Element => {
-  const dispatch = useAppDispatch();
-  const {
-    petListById,
-    petKinds,
-    petKindsByValue,
-    petList,
-    isError,
-    isLoading,
-  } = useAppSelector(globalSelector);
+  const [fetchLoading, setFetchLoading] = useState<boolean>(false);
+  const [fetchError, setFetchError] = useState<boolean>(false);
+  const [petList, setPetList] = useState<PetListItem[] | undefined>();
+  const [petKinds, setPetKinds] = useState<PetKind[] | undefined>();
+  const [petKindsByValue, setPetKindsByValue] = useState<
+    Map<number, string> | undefined
+  >();
+  const [petListById, setPetListById] = useState<
+    Map<number, PetListItem> | undefined
+  >();
+  const petKindsFetchedRef = useRef<boolean>(false);
 
-  const fetchListData = useCallback(() => {
-    void dispatch(fetchPetsData());
-  }, [dispatch]);
+  const fetchListData = useCallback(async () => {
+    setFetchError(false);
+    setFetchLoading(true);
+
+    try {
+      const petListPromise = getPetList();
+
+      if (!petKindsFetchedRef.current) {
+        const kinds = await getPetKinds();
+        const kindsByValue = new Map();
+        for (const kind of kinds) {
+          kindsByValue.set(kind.value, kind.displayName);
+        }
+        setPetKinds(kinds);
+        setPetKindsByValue(kindsByValue);
+        petKindsFetchedRef.current = true;
+      }
+
+      const petItems = await petListPromise;
+      const listById = new Map();
+      for (const pet of petItems) {
+        listById.set(pet.petId, pet);
+      }
+      setPetList(petItems);
+      setPetListById(listById);
+    } catch (error) {
+      reportError(error);
+
+      setFetchError(true);
+    } finally {
+      setFetchLoading(false);
+    }
+  }, [petKindsFetchedRef]);
 
   useEffect(() => {
-    fetchListData();
+    fetchListData().catch(reportError);
   }, [fetchListData]);
 
   const [deletePet, setDeletePet] = useState<PetListItem | undefined>();
   const handleOnDeleteClick = useCallback(
-    (petId: number) => setDeletePet(petListById?.[petId]),
+    (petId: number) => setDeletePet(petListById?.get(petId) as PetListItem),
     [petListById]
   );
   const handleOnDeleteModalClose = useCallback(
@@ -45,19 +73,15 @@ export const App = memo((): JSX.Element => {
   );
 
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
-
   const [editPetId, setEditPetId] = useState<number | undefined>();
-
   const handleOnEditClick = useCallback((petId: number) => {
     setEditPetId(petId);
     setShowEditModal(true);
   }, []);
-
   const handleOnEditModalClose = useCallback(() => {
     setEditPetId(undefined);
     setShowEditModal(false);
-    dispatch(globalActions.clearSelectedPet());
-  }, [dispatch]);
+  }, []);
 
   const handleOnAddClick = useCallback(() => {
     setEditPetId(undefined);
@@ -68,6 +92,7 @@ export const App = memo((): JSX.Element => {
     <main>
       <div className="pet-list-page-header">
         <h2>Pet Store</h2>
+
         {petKinds && (
           <button
             type="button"
@@ -82,30 +107,40 @@ export const App = memo((): JSX.Element => {
       <hr />
 
       <div className="pet-list-page-content">
-        {isError && <ErrorIndicator />}
-        {isLoading && <LoadingIndicator />}
-        {!isLoading && !isError && petKindsByValue && petList && (
-          <PetList
-            petList={petList}
-            petKindsByValue={petKindsByValue}
-            onEdit={handleOnEditClick}
-            onDelete={handleOnDeleteClick}
-          />
-        )}
-        {deletePet && (
-          <DeletePetModal
-            pet={deletePet}
-            onClose={handleOnDeleteModalClose}
-            onDeleted={fetchListData}
-          />
-        )}
-        {showEditModal && (
-          <EditPetModal
-            petId={editPetId}
-            onClose={handleOnEditModalClose}
-            onSaved={fetchListData}
-            onDeleted={fetchListData}
-          />
+        {fetchError && <ErrorIndicator />}
+        {fetchLoading && <LoadingIndicator />}
+
+        {petList && petKindsByValue && petKinds && (
+          <>
+            {!fetchLoading && !fetchError && (
+              <PetList
+                petList={petList}
+                onEdit={handleOnEditClick}
+                onDelete={handleOnDeleteClick}
+                petKindsByValue={petKindsByValue}
+              />
+            )}
+
+            {deletePet && (
+              <DeletePetModal
+                pet={deletePet}
+                onClose={handleOnDeleteModalClose}
+                onDeleted={fetchListData}
+                petKindsByValue={petKindsByValue}
+              />
+            )}
+
+            {showEditModal && (
+              <EditPetModal
+                petId={editPetId}
+                onClose={handleOnEditModalClose}
+                onSaved={fetchListData}
+                onDeleted={fetchListData}
+                petKindsByValue={petKindsByValue}
+                petKinds={petKinds}
+              />
+            )}
+          </>
         )}
       </div>
     </main>

@@ -1,6 +1,7 @@
 import { afterAll, afterEach, beforeAll, test, vi, describe } from 'vitest';
 import {
   cleanup,
+  render,
   screen,
   waitFor,
   waitForElementToBeRemoved,
@@ -13,11 +14,7 @@ import { setupServer } from 'msw/node';
 import { WaitHandle } from './testing/wait-handle';
 import { App } from './App';
 import { API_URL } from './utils/api-client';
-import {
-  defaultHandlers,
-  defaultWaitHandles,
-  renderWithProviders,
-} from './testing/testing-utils';
+import { defaultHandlers, defaultWaitHandles } from './testing/testing-utils';
 
 vi.mock('./utils/reportError');
 
@@ -42,7 +39,7 @@ const { getPetKidsWaitHandle } = defaultWaitHandles;
 
 describe('landing page', () => {
   test('shows app heading', ({ expect }) => {
-    renderWithProviders(<App />);
+    render(<App />);
 
     expect(
       screen.getByRole('heading', { name: 'Pet Store' })
@@ -54,7 +51,7 @@ describe('landing page', () => {
   }) => {
     getPetKidsWaitHandle.enable();
 
-    renderWithProviders(<App />);
+    render(<App />);
 
     expect(
       screen.queryByRole('button', { name: 'Add Pet' })
@@ -70,7 +67,7 @@ describe('landing page', () => {
   test('displays a list of pets', async ({ expect }) => {
     getPetKidsWaitHandle.enable();
 
-    renderWithProviders(<App />);
+    render(<App />);
 
     const loadingIndicator = await screen.findByTestId('loading-indicator');
     getPetKidsWaitHandle.release();
@@ -93,7 +90,7 @@ describe('landing page', () => {
       })
     );
 
-    renderWithProviders(<App />);
+    render(<App />);
 
     const loadingIndicator = await screen.findByTestId('loading-indicator');
     waitHandle.release();
@@ -116,7 +113,7 @@ describe('landing page', () => {
       })
     );
 
-    renderWithProviders(<App />);
+    render(<App />);
 
     const loadingIndicator = await screen.findByTestId('loading-indicator');
     waitHandle.release();
@@ -134,7 +131,7 @@ describe('modals', () => {
   }) => {
     const user = userEvent.setup();
 
-    renderWithProviders(<App />);
+    render(<App />);
 
     const petsTable = await screen.findByRole('table');
     const petRow = within(petsTable).getAllByRole('row', { name: 'Pet' })[0];
@@ -161,7 +158,7 @@ describe('modals', () => {
   }) => {
     const user = userEvent.setup();
 
-    renderWithProviders(<App />);
+    render(<App />);
 
     const petsTable = await screen.findByRole('table');
     const petRow = within(petsTable).getAllByRole('row', { name: 'Pet' })[0];
@@ -188,7 +185,7 @@ describe('modals', () => {
   }) => {
     const user = userEvent.setup();
 
-    renderWithProviders(<App />);
+    render(<App />);
 
     const addButton = await screen.findByRole('button', { name: 'Add Pet' });
 
@@ -214,7 +211,7 @@ describe('re-fresh pet list', () => {
   }) => {
     const user = userEvent.setup();
 
-    renderWithProviders(<App />);
+    render(<App />);
 
     const table = await screen.findByRole('table');
     const row = within(table).getAllByRole('row', { name: 'Pet' })[0];
@@ -257,7 +254,7 @@ describe('re-fresh pet list', () => {
   }) => {
     const user = userEvent.setup();
 
-    renderWithProviders(<App />);
+    render(<App />);
 
     const table = await screen.findByRole('table');
     const row = within(table).getAllByRole('row', { name: 'Pet' })[0];

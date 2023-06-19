@@ -8,8 +8,8 @@ import {
   vi,
 } from 'vitest';
 import {
-  act,
   cleanup,
+  render,
   screen,
   waitFor,
   waitForElementToBeRemoved,
@@ -19,13 +19,9 @@ import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
 
-import {
-  defaultHandlers,
-  defaultWaitHandles,
-  renderWithProviders,
-} from '../testing/testing-utils';
-import { createReduxStore } from '../redux/createReduxStore';
-import { fetchPetsData } from '../redux/globalSlice';
+import { mockPetKinds, mockPetKindsByValue } from '~testing/mock-data.ts';
+
+import { defaultHandlers, defaultWaitHandles } from '../testing/testing-utils';
 import { EditPetModal } from './EditPetModal';
 import { API_URL } from '../utils/api-client';
 import { WaitHandle } from '../testing/wait-handle';
@@ -57,29 +53,24 @@ interface RenderEditModalOptions {
   addMode?: boolean;
 }
 
-const renderEditModal = async (options?: RenderEditModalOptions) => {
+const renderEditModal = (options?: RenderEditModalOptions) => {
   const handleOnDeleted = vi.fn();
   const handleOnClose = vi.fn();
   const handleOnSaved = vi.fn();
-
-  const store = createReduxStore();
-
-  await act(async () => {
-    await store.dispatch(fetchPetsData()).unwrap();
-  });
 
   options?.registerHandlers?.();
 
   const petId = options?.addMode ? undefined : 42;
 
-  renderWithProviders(
+  render(
     <EditPetModal
+      petKinds={mockPetKinds}
+      petKindsByValue={mockPetKindsByValue}
       petId={petId}
       onClose={handleOnClose}
       onDeleted={handleOnDeleted}
       onSaved={handleOnSaved}
-    />,
-    { store }
+    />
   );
 
   return {
@@ -193,7 +184,7 @@ test('edit modal defaults to view mode when called with a valid pet id', async (
 }) => {
   getPetWaitHandle.enable();
 
-  await renderEditModal();
+  renderEditModal();
 
   const loadingIndicator = await screen.findByTestId('loading-indicator');
   getPetWaitHandle.release();
@@ -205,7 +196,7 @@ test('edit modal defaults to view mode when called with a valid pet id', async (
 test('shows error indicator when pet request fails', async ({ expect }) => {
   const waitHandle = new WaitHandle();
 
-  await renderEditModal({
+  renderEditModal({
     registerHandlers: () => {
       server.use(
         rest.get(`${API_URL}/pet/:petId`, async (_req, res, ctx) => {
@@ -230,7 +221,7 @@ test('onClosed is called on successful delete operation', async ({
 }) => {
   const user = userEvent.setup();
 
-  const { handleOnClose } = await renderEditModal();
+  const { handleOnClose } = renderEditModal();
 
   const deleteButton = await screen.findByRole('button', { name: 'Delete' });
 
@@ -252,7 +243,7 @@ test('onClosed is called on successful delete operation', async ({
 test('onClosed is called when cancel button is clicked', async ({ expect }) => {
   const user = userEvent.setup();
 
-  const { handleOnClose } = await renderEditModal();
+  const { handleOnClose } = renderEditModal();
 
   const cancelButton = await screen.findByRole('button', { name: 'Cancel' });
 
@@ -266,7 +257,7 @@ test('transitions the form into edit mode when the edit button is clicked', asyn
 }) => {
   const user = userEvent.setup();
 
-  await renderEditModal();
+  renderEditModal();
 
   const editButton = await screen.findByRole('button', { name: 'Edit' });
 
@@ -280,7 +271,7 @@ test('transitions back to display mode when the cancel button is clicked', async
 }) => {
   const user = userEvent.setup();
 
-  await renderEditModal();
+  renderEditModal();
 
   const editButton = await screen.findByRole('button', { name: 'Edit' });
 
@@ -317,7 +308,7 @@ test('clicking save transitions the form to display mode', async ({
 }) => {
   const user = userEvent.setup();
 
-  await renderEditModal();
+  renderEditModal();
 
   await user.click(await screen.findByRole('button', { name: 'Edit' }));
 
@@ -346,7 +337,7 @@ test('clicking save transitions the form to display mode', async ({
 test('delete modal is closed after cancel is clicked', async ({ expect }) => {
   const user = userEvent.setup();
 
-  await renderEditModal();
+  renderEditModal();
 
   const deleteButton = await screen.findByRole('button', { name: 'Delete' });
 
@@ -374,7 +365,7 @@ test('form is returned to display mode when the cancel button is clicked', async
 }) => {
   const user = userEvent.setup();
 
-  await renderEditModal();
+  renderEditModal();
 
   await user.click(await screen.findByRole('button', { name: 'Edit' }));
 
@@ -394,7 +385,7 @@ test('cancel button resets the state successfully after failed update request', 
 }) => {
   const user = userEvent.setup();
 
-  await renderEditModal();
+  renderEditModal();
 
   await user.click(await screen.findByRole('button', { name: 'Edit' }));
 
@@ -443,7 +434,7 @@ test('will not submit data if input validation fails', async ({ expect }) => {
 
   const user = userEvent.setup();
 
-  await renderEditModal();
+  renderEditModal();
 
   const editButton = await screen.findByRole('button', { name: 'Edit' });
 
@@ -498,7 +489,7 @@ describe('add mode', () => {
 
     const waitHandle = new WaitHandle();
 
-    await renderEditModal({
+    renderEditModal({
       registerHandlers: () => {
         server.use(
           rest.post(`${API_URL}/pet`, async (_req, res, ctx) => {
@@ -532,7 +523,7 @@ describe('add mode', () => {
   }) => {
     const user = userEvent.setup();
 
-    await renderEditModal({
+    renderEditModal({
       addMode: true,
     });
 
@@ -550,7 +541,7 @@ describe('add mode', () => {
   test('cancel button calls onClose', async ({ expect }) => {
     const user = userEvent.setup();
 
-    const { handleOnClose } = await renderEditModal({
+    const { handleOnClose } = renderEditModal({
       addMode: true,
     });
 
