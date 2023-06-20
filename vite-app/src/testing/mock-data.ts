@@ -37,3 +37,9 @@ export const mockPetKinds = [
   { displayName: 'Dog', value: 2 },
   { displayName: 'Parrot', value: 3 },
 ];
+
+export const mockPetKindsByValue = {
+  1: { displayName: 'Cat', value: 1 },
+  2: { displayName: 'Dog', value: 2 },
+  3: { displayName: 'Parrot', value: 3 },
+};
