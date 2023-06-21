@@ -45,7 +45,8 @@ preview: {
 - Add to the typescript configuration
 
 ```
-"noImplicitAny": true
+"noImplicitAny": true,
+"pretty": true,
 ```
 
 - Change the `dev` script to `start`:
