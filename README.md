@@ -157,6 +157,12 @@ test: {
 
 - Copy the test setup file and the tests from the `extra` directory 
 
+- Change `tsconfig.node.json` to include `setupTests.ts`
+
+```
+"include": ["vite.config.ts", "setupTests.ts"]
+```
+
 - Add the npm script
 
 ```
