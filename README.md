@@ -251,6 +251,7 @@ npm run fmt
 ```shell
 npm i -D eslint-config-airbnb
 npm i -D eslint-config-airbnb-typescript
+npm i -D eslint-plugin-deprecation
 npm i -D eslint-config-prettier
 npm i -D eslint-import-resolver-alias
 npm i -D eslint-plugin-import
