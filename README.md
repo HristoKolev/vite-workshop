@@ -1,4 +1,6 @@
-# Vite
+# Vite workshop
+
+TODO: Describe what this is, why it exists and how it should be used.
 
 ## 0 - Create project
 
@@ -43,7 +45,8 @@ preview: {
 - Add to the typescript configuration
 
 ```
-"noImplicitAny": true
+"noImplicitAny": true,
+"pretty": true,
 ```
 
 - Change the `dev` script to `start`:
@@ -155,6 +158,12 @@ test: {
 
 - Copy the test setup file and the tests from the `extra` directory 
 
+- Change `tsconfig.node.json` to include `setupTests.ts`
+
+```
+"include": ["vite.config.ts", "setupTests.ts"]
+```
+
 - Add the npm script
 
 ```
@@ -242,6 +251,7 @@ npm run fmt
 ```shell
 npm i -D eslint-config-airbnb
 npm i -D eslint-config-airbnb-typescript
+npm i -D eslint-plugin-deprecation
 npm i -D eslint-config-prettier
 npm i -D eslint-import-resolver-alias
 npm i -D eslint-plugin-import

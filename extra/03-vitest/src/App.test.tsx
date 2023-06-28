@@ -8,12 +8,12 @@ import { App } from './App';
 
 const server = setupServer(
   rest.get('http://localhost:3001/', (_req, res, ctx) =>
-    res(ctx.text('Hello from the server!'))
-  )
+    res(ctx.text('Hello from the server!')),
+  ),
 );
 
 beforeAll(() => {
-  server.listen();
+  server.listen({ onUnhandledRequest: 'error' });
 });
 
 beforeEach(() => {
@@ -33,7 +33,7 @@ test('App renders data', async ({ expect }) => {
   render(<App />);
   expect(screen.getByText('Hello Vite')).toBeInTheDocument();
   expect(screen.getByTestId('date-label')).toHaveTextContent(
-    format(new Date(), 'dd MMM yyyy')
+    format(new Date(), 'dd MMM yyyy'),
   );
 
   const serverMessage = await screen.findByTestId('server-message');
