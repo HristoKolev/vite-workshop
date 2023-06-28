@@ -11,7 +11,8 @@
     "airbnb/hooks",
     "plugin:eslint-comments/recommended",
     "plugin:import/errors",
-    "plugin:import/warnings"
+    "plugin:import/warnings",
+    "prettier"
   ],
   "plugins": ["react-refresh", "react", "eslint-comments", "prettier"],
   "parserOptions": {
@@ -35,14 +36,10 @@
   "reportUnusedDisableDirectives": true,
   "ignorePatterns": ["package-lock.json", "/dist/", "/coverage/", "/extra/"],
   "rules": {
-    "object-curly-newline": "off",
-    "indent": "off",
-    "implicit-arrow-linebreak": "off",
-    "function-paren-newline": "off",
+    "prettier/prettier": "error",
     "no-void": "off",
     "linebreak-style": ["error", "unix"],
     "no-console": "error",
-    "prettier/prettier": "error",
     "no-restricted-syntax": [
       "error",
       {
@@ -59,9 +56,7 @@
       }
     ],
     "no-param-reassign": "off",
-    "import/no-unresolved": "off",
     "import/prefer-default-export": "off",
-    "import/extensions": "off",
     "import/order": [
       "error",
       {
@@ -117,7 +112,8 @@
         "plugin:@typescript-eslint/recommended",
         "airbnb-typescript",
         "plugin:import/typescript",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "prettier"
       ],
       "rules": {
         "deprecation/deprecation": "error",
@@ -147,12 +143,20 @@
     },
     {
       // Test files and test related infrastructure
-      "files": ["**/+(*.)+(spec|test).+(ts|js)?(x)", "src/testing/**"],
+      "files": ["**/+(*.)+(spec|test).+(ts|js)?(x)", "./src/testing/**"],
       "plugins": ["vitest"],
       "extends": ["plugin:vitest/recommended", "plugin:testing-library/react"],
       "rules": {
         "testing-library/no-wait-for-multiple-assertions": "off",
-        "vitest/expect-expect": "off"
+        "vitest/expect-expect": "off",
+        "import/no-extraneous-dependencies": [
+          "error",
+          {
+            "devDependencies": true,
+            "optionalDependencies": false,
+            "peerDependencies": false
+          }
+        ]
       }
     },
     {
