@@ -9,10 +9,10 @@
     "preview": "vite preview",
     "profile": "npm run build && source-map-explorer dist/**/*.js",
     "test": "vitest run",
-    "fmt": "prettier --write .",
+    "format": "prettier --write .",
     "typecheck": "tsc",
     "lint": "eslint ./ --max-warnings 0",
-    "lint-fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",

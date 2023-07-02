@@ -228,13 +228,13 @@ npm i -D prettier
 - Add the npm script
 
 ```
-"fmt": "prettier --write .",
+"format": "prettier --write .",
 ```
 
 - Run the format script
 
 ```shell
-npm run fmt
+npm run format
 ```
 
 - Demonstrate WebStorm config
@@ -280,7 +280,7 @@ npm i -D eslint-plugin-testing-library
 
 ```
 "lint": "eslint ./ --max-warnings 0",
-"lint-fix": "npm run lint -- --fix"
+"lint:fix": "npm run lint -- --fix"
 ```
 
 - Modify the build npm script

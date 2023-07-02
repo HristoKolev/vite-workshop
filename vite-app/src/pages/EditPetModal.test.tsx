@@ -31,7 +31,7 @@ vi.mock('../utils/reportError');
 const server = setupServer(...defaultHandlers);
 
 beforeAll(() => {
-  server.listen();
+  server.listen({ onUnhandledRequest: 'error' });
 });
 
 afterEach(() => {
