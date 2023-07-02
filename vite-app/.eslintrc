@@ -18,8 +18,7 @@
     "react",
     "eslint-comments",
     "unused-imports",
-    "new-with-error",
-    "prettier"
+    "new-with-error"
   ],
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -37,7 +36,6 @@
   "reportUnusedDisableDirectives": true,
   "ignorePatterns": ["package-lock.json", "/dist/", "/coverage/", "/extra/"],
   "rules": {
-    "prettier/prettier": "error",
     "no-void": "off",
     "no-undefined": "off",
     "linebreak-style": ["error", "unix"],

@@ -225,16 +225,23 @@ npm i -D prettier
 
 - Add the config files
 
-- Add the npm script
+- Add the npm scripts
 
 ```
 "format": "prettier --write .",
+"format-check": "prettier --check .",
 ```
 
 - Run the format script
 
 ```shell
 npm run format
+```
+
+- Modify the build npm script
+
+```
+"build": "npm run format-check && npm run typecheck && vite build",
 ```
 
 - Demonstrate WebStorm config
@@ -286,7 +293,7 @@ npm i -D eslint-plugin-testing-library
 - Modify the build npm script
  
 ```
-"build": "npm run lint && npm run typecheck && vite build",
+"build": "npm run format-check && npm run lint && npm run typecheck && vite build",
 ```
 
 - Demonstrate WebStorm config
