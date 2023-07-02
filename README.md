@@ -49,6 +49,10 @@ preview: {
 "pretty": true,
 ```
 
+- Remove from the typescript configuration
+
+`allowImportingTsExtensions`
+
 - Change the `dev` script to `start`:
 
 ```
@@ -255,6 +259,9 @@ npm i -D eslint-plugin-deprecation
 npm i -D eslint-config-prettier
 npm i -D eslint-import-resolver-alias
 npm i -D eslint-plugin-import
+npm i -D eslint-import-resolver-typescript
+npm i -D eslint-plugin-new-with-error
+npm i -D eslint-plugin-unused-imports
 npm i -D eslint-plugin-react
 npm i -D eslint-plugin-jsx-a11y
 npm i -D eslint-plugin-eslint-comments
