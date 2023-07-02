@@ -141,7 +141,7 @@ npm i -D source-map-explorer
 ```shell
 npm i -D vitest @vitest/coverage-istanbul
 npm i -D @testing-library/dom @testing-library/react @testing-library/user-event @testing-library/jest-dom jsdom 
-npm i -D msw node-fetch@2
+npm i -D msw
 ```
 
 - Add this import to the vite config
