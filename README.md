@@ -114,7 +114,17 @@ import { formatDate } from '~helpers';
 import logoUrl from 'src/logo.png';
 ```
 
-## 2 - Bundle Analyzer
+## 2 - ts-reset
+
+- Install the package
+
+```shell
+npm i -D @total-typescript/ts-reset
+```
+
+- Copy the files from the `extra` directory
+
+## 3 - Bundle Analyzer
 
 ```shell
 npm i -D source-map-explorer
@@ -126,7 +136,7 @@ npm i -D source-map-explorer
 "profile": "npm run build && source-map-explorer dist/**/*.js"
 ```
 
-## 3 - Vitest
+## 4 - Vitest
 
 ```shell
 npm i -D vitest @vitest/coverage-istanbul
@@ -174,48 +184,7 @@ test: {
  "test": "vitest run",
 ```
 
-## 4 - Tailwind
-
-- Install the package
-
-```shell
-npm i -D tailwindcss
-```
-
-- Copy the tailwind, postcss configs from the `extra` directory
-
-- Add the tailwind directives on top of your css file
-
-```
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-
-- Use tailwind somewhere in the application
-
-## 5 - MUI
-
-```shell
-npm i @mui/material @emotion/react @emotion/styled @fontsource/roboto @mui/icons-material
-```
-
-* import the fonts
-
-```
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-```
-
-* add the MUI baseline component
-
-```jsx
-<CssBaseline />
-```
-
-## 6 - Prettier
+## 5 - Prettier
 
 - Install the package
 
@@ -255,7 +224,7 @@ npm run format
   "prettier.configPath": ".prettierrc"
 ```
 
-## 7 - ESLint
+## 6 - ESLint
 
 - Install the extra packages
 
@@ -291,7 +260,7 @@ npm i -D eslint-plugin-testing-library
 ```
 
 - Modify the build npm script
- 
+
 ```
 "build": "npm run format-check && npm run lint && npm run typecheck && vite build",
 ```
@@ -305,4 +274,45 @@ npm i -D eslint-plugin-testing-library
     "source.fixAll.eslint": true
   },
   "eslint.validate": ["typescript", "typescriptreact"]
+```
+
+## 7 - Tailwind (OPTIONAL)
+
+- Install the package
+
+```shell
+npm i -D tailwindcss
+```
+
+- Copy the tailwind, postcss configs from the `extra` directory
+
+- Add the tailwind directives on top of your css file
+
+```
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+- Use tailwind somewhere in the application
+
+## 8 - MUI (OPTIONAL)
+
+```shell
+npm i @mui/material @emotion/react @emotion/styled @fontsource/roboto @mui/icons-material
+```
+
+* import the fonts
+
+```
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+```
+
+* add the MUI baseline component
+
+```jsx
+<CssBaseline />
 ```
