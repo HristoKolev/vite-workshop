@@ -1,11 +1,11 @@
-import { memo, useCallback, useState, JSX } from 'react';
+import { type JSX, memo, useCallback, useState } from 'react';
 
-import { Modal } from '../shared/Modal';
-import { PetListItem } from '../utils/server-data-model';
-import { LoadingIndicator } from '../shared/LoadingIndicator';
-import { deletePet } from '../utils/api-client';
-import { ErrorIndicator } from '../shared/ErrorIndicator';
-import { reportError } from '../utils/reportError';
+import { ErrorIndicator } from '~shared/ErrorIndicator';
+import { LoadingIndicator } from '~shared/LoadingIndicator';
+import { Modal } from '~shared/Modal';
+import { deletePet } from '~utils/api-client';
+import { reportError } from '~utils/reportError';
+import type { PetListItem } from '~utils/server-data-model';
 
 import './DeletePetModal.css';
 

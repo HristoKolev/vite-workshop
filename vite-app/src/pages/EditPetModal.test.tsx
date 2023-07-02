@@ -1,13 +1,4 @@
 import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  describe,
-  ExpectStatic,
-  test,
-  vi,
-} from 'vitest';
-import {
   cleanup,
   render,
   screen,
@@ -16,15 +7,24 @@ import {
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { setupServer } from 'msw/node';
 import { rest } from 'msw';
+import { setupServer } from 'msw/node';
+import {
+  type ExpectStatic,
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  test,
+  vi,
+} from 'vitest';
 
-import { mockPetKinds, mockPetKindsByValue } from '~testing/mock-data.ts';
+import { mockPetKinds, mockPetKindsByValue } from '~testing/mock-data';
+import { defaultHandlers, defaultWaitHandles } from '~testing/testing-utils';
+import { WaitHandle } from '~testing/wait-handle';
+import { API_URL } from '~utils/api-client';
 
-import { defaultHandlers, defaultWaitHandles } from '../testing/testing-utils';
 import { EditPetModal } from './EditPetModal';
-import { API_URL } from '../utils/api-client';
-import { WaitHandle } from '../testing/wait-handle';
 
 vi.mock('../utils/reportError');
 

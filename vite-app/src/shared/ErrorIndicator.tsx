@@ -1,4 +1,4 @@
-import { memo, JSX } from 'react';
+import { type JSX, memo } from 'react';
 
 import './ErrorIndicator.css';
 

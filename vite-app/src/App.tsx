@@ -1,13 +1,20 @@
-import { memo, useCallback, useEffect, useRef, useState, JSX } from 'react';
+import {
+  type JSX,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-import { getPetKinds, getPetList } from './utils/api-client';
-import { PetKind, PetListItem } from './utils/server-data-model';
-import { ErrorIndicator } from './shared/ErrorIndicator';
-import { LoadingIndicator } from './shared/LoadingIndicator';
 import { DeletePetModal } from './pages/DeletePetModal';
 import { EditPetModal } from './pages/EditPetModal';
 import { PetList } from './pages/PetList';
+import { ErrorIndicator } from './shared/ErrorIndicator';
+import { LoadingIndicator } from './shared/LoadingIndicator';
+import { getPetKinds, getPetList } from './utils/api-client';
 import { reportError } from './utils/reportError';
+import type { PetKind, PetListItem } from './utils/server-data-model';
 
 import './App.css';
 

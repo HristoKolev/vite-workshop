@@ -1,5 +1,3 @@
-import { afterAll, beforeAll, afterEach, test, vi } from 'vitest';
-import { setupServer } from 'msw/node';
 import {
   cleanup,
   render,
@@ -9,14 +7,17 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { rest } from 'msw';
+import { setupServer } from 'msw/node';
+import { afterAll, afterEach, beforeAll, test, vi } from 'vitest';
 
-import { defaultHandlers } from '../testing/testing-utils';
+import { mockPetKindsByValue, mockPetList } from '~testing/mock-data';
+import { defaultHandlers } from '~testing/testing-utils';
+import { WaitHandle } from '~testing/wait-handle';
+import { API_URL } from '~utils/api-client';
+import { reportError } from '~utils/reportError';
+import type { PetListItem } from '~utils/server-data-model';
+
 import { DeletePetModal } from './DeletePetModal';
-import { PetListItem } from '../utils/server-data-model';
-import { API_URL } from '../utils/api-client';
-import { mockPetKindsByValue, mockPetList } from '../testing/mock-data';
-import { reportError } from '../utils/reportError';
-import { WaitHandle } from '../testing/wait-handle';
 
 vi.mock('../utils/reportError');
 

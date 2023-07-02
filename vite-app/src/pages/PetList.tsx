@@ -1,6 +1,6 @@
-import { memo, MouseEvent, useCallback, JSX } from 'react';
+import { type JSX, type MouseEvent, memo, useCallback } from 'react';
 
-import { PetListItem } from '~utils/server-data-model.ts';
+import type { PetListItem } from '~utils/server-data-model';
 
 import './PetList.css';
 
@@ -11,7 +11,7 @@ const formatDate = (date: string): string =>
     year: 'numeric',
   });
 
-interface PetsListProps {
+export interface PetsListProps {
   onEdit: (petId: number) => void;
 
   onDelete: (petId: number) => void;

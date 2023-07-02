@@ -1,8 +1,8 @@
-import { RequestHandler, rest } from 'msw';
+import { type RequestHandler, rest } from 'msw';
 
-import { createWaitHandleCollection } from '~testing/wait-handle.ts';
+import { createWaitHandleCollection } from '~testing/wait-handle';
+import { API_URL } from '~utils/api-client';
 
-import { API_URL } from '../utils/api-client';
 import { mockPetKinds, mockPetList } from './mock-data';
 
 export const defaultWaitHandles = createWaitHandleCollection<

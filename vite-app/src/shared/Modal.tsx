@@ -1,4 +1,4 @@
-import { memo, ReactNode, useCallback, JSX } from 'react';
+import { type JSX, type ReactNode, memo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 
 import closeModalPng from './close-modal.png';

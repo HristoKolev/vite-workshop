@@ -1,20 +1,21 @@
 import {
-  ChangeEvent,
+  type ChangeEvent,
+  type JSX,
   memo,
   useCallback,
   useEffect,
   useRef,
   useState,
-  JSX,
 } from 'react';
 
-import { Modal } from '../shared/Modal';
-import { Pet, PetKind } from '../utils/server-data-model';
-import { createPet, getPet, updatePet } from '../utils/api-client';
-import { LoadingIndicator } from '../shared/LoadingIndicator';
-import { ErrorIndicator } from '../shared/ErrorIndicator';
+import { ErrorIndicator } from '~shared/ErrorIndicator';
+import { LoadingIndicator } from '~shared/LoadingIndicator';
+import { Modal } from '~shared/Modal';
+import { createPet, getPet, updatePet } from '~utils/api-client';
+import { reportError } from '~utils/reportError';
+import type { Pet, PetKind } from '~utils/server-data-model';
+
 import { DeletePetModal } from './DeletePetModal';
-import { reportError } from '../utils/reportError';
 
 import './EditPetModal.css';
 
