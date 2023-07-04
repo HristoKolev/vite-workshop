@@ -1,8 +1,0 @@
-dist
-coverage
-package-lock.json
-
-postcss.config.js
-tailwind.config.js
-setupTests.ts
-vite.config.ts
