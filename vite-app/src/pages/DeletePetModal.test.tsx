@@ -11,7 +11,7 @@ import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, test, vi } from 'vitest';
 
 import { mockPetKindsByValue, mockPetList } from '~testing/mock-data';
-import { defaultHandlers } from '~testing/testing-utils';
+import { defaultHandlers } from '~testing/utils';
 import { WaitHandle } from '~testing/wait-handle';
 import { API_URL } from '~utils/api-client';
 import { reportError } from '~utils/reportError';

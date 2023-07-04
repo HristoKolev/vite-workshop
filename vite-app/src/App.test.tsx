@@ -12,7 +12,7 @@ import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, test, vi } from 'vitest';
 
 import { App } from './App';
-import { defaultHandlers, defaultWaitHandles } from './testing/testing-utils';
+import { defaultHandlers, defaultWaitHandles } from './testing/utils';
 import { WaitHandle } from './testing/wait-handle';
 import { API_URL } from './utils/api-client';
 

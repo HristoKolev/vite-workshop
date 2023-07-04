@@ -20,7 +20,7 @@ import {
 } from 'vitest';
 
 import { mockPetKinds, mockPetKindsByValue } from '~testing/mock-data';
-import { defaultHandlers, defaultWaitHandles } from '~testing/testing-utils';
+import { defaultHandlers, defaultWaitHandles } from '~testing/utils';
 import { WaitHandle } from '~testing/wait-handle';
 import { API_URL } from '~utils/api-client';
 
