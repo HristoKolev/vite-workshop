@@ -1,8 +1,8 @@
-import { beforeEach, afterAll, beforeAll, test, afterEach } from 'vitest'; // Different than jest. Globals are off by default.
 import { cleanup, render, screen } from '@testing-library/react';
-import { setupServer } from 'msw/node';
-import { rest } from 'msw';
 import { format } from 'date-fns';
+import { rest } from 'msw';
+import { setupServer } from 'msw/node';
+import { afterAll, afterEach, beforeAll, beforeEach, test } from 'vitest'; // Different than jest. Globals are off by default.
 
 import { App } from './App';
 

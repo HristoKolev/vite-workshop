@@ -1,7 +1,7 @@
-import { useEffect, useState, JSX } from 'react';
-import logoUrl from 'src/logo.png';
 import { Button, CssBaseline } from '@mui/material';
+import { type JSX, useEffect, useState } from 'react';
 
+import logoUrl from 'src/logo.png';
 import { formatDate } from '~helpers';
 
 export const App = (): JSX.Element => {
