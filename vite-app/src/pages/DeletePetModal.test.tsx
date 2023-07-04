@@ -13,7 +13,7 @@ import { afterAll, afterEach, beforeAll, test, vi } from 'vitest';
 import { createReduxStore } from '~redux/createReduxStore';
 import { fetchPetsData } from '~redux/globalSlice';
 import { mockPetList } from '~testing/mock-data';
-import { defaultHandlers, renderWithProviders } from '~testing/testing-utils';
+import { defaultHandlers, renderWithProviders } from '~testing/utils';
 import { WaitHandle } from '~testing/wait-handle';
 import { API_URL } from '~utils/api-client';
 import { reportError } from '~utils/reportError';

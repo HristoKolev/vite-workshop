@@ -25,7 +25,7 @@ import {
   defaultHandlers,
   defaultWaitHandles,
   renderWithProviders,
-} from '~testing/testing-utils';
+} from '~testing/utils';
 import { WaitHandle } from '~testing/wait-handle';
 import { API_URL } from '~utils/api-client';
 
