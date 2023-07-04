@@ -1,27 +1,28 @@
 import {
-  ChangeEvent,
+  type ChangeEvent,
+  type JSX,
   memo,
   useCallback,
   useEffect,
   useRef,
   useState,
-  JSX,
 } from 'react';
 
-import { Modal } from '../shared/Modal';
-import { Pet } from '../utils/server-data-model';
-import { LoadingIndicator } from '../shared/LoadingIndicator';
-import { ErrorIndicator } from '../shared/ErrorIndicator';
-import { DeletePetModal } from './DeletePetModal';
-import { reportError } from '../utils/reportError';
-import { useAppDispatch, useAppSelector } from '../redux/createReduxStore';
+import { useAppDispatch, useAppSelector } from '~redux/createReduxStore';
 import {
   getPetThunk,
   globalActions,
   globalSelector,
   savePetThunk,
   selectedPetSelector,
-} from '../redux/globalSlice';
+} from '~redux/globalSlice';
+import { ErrorIndicator } from '~shared/ErrorIndicator';
+import { LoadingIndicator } from '~shared/LoadingIndicator';
+import { Modal } from '~shared/Modal';
+import { reportError } from '~utils/reportError';
+import type { Pet } from '~utils/server-data-model';
+
+import { DeletePetModal } from './DeletePetModal';
 
 import './EditPetModal.css';
 
@@ -252,7 +253,11 @@ export const EditPetModal = memo(
                     !editingEnabled || Boolean(selectedPet) || savePetLoading
                   }
                 >
-                  <option value="" key="" />
+                  {!kind && (
+                    <option value="" key="">
+                      Please, select a pet kind
+                    </option>
+                  )}
                   {petKinds?.map((petKind) => (
                     <option value={petKind.value} key={petKind.value}>
                       {petKind.displayName}

@@ -1,4 +1,3 @@
-import { afterAll, afterEach, beforeAll, test, vi, describe } from 'vitest';
 import {
   cleanup,
   screen,
@@ -9,22 +8,23 @@ import {
 import userEvent from '@testing-library/user-event';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
+import { afterAll, afterEach, beforeAll, describe, test, vi } from 'vitest';
 
-import { WaitHandle } from './testing/wait-handle';
 import { App } from './App';
-import { API_URL } from './utils/api-client';
 import {
   defaultHandlers,
   defaultWaitHandles,
   renderWithProviders,
 } from './testing/testing-utils';
+import { WaitHandle } from './testing/wait-handle';
+import { API_URL } from './utils/api-client';
 
 vi.mock('./utils/reportError');
 
 const server = setupServer(...defaultHandlers);
 
 beforeAll(() => {
-  server.listen();
+  server.listen({ onUnhandledRequest: 'error' });
 });
 
 afterEach(() => {

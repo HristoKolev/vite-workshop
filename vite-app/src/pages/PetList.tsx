@@ -1,6 +1,6 @@
-import { memo, MouseEvent, useCallback, JSX } from 'react';
+import { type JSX, type MouseEvent, memo, useCallback } from 'react';
 
-import { PetKind, PetListItem } from '~utils/server-data-model.ts';
+import type { PetKind, PetListItem } from '~utils/server-data-model';
 
 import './PetList.css';
 
@@ -32,7 +32,7 @@ export const PetList = memo(
       (ev: MouseEvent) => {
         const button = ev.target as HTMLButtonElement;
         const petId = Number(button.getAttribute('data-pet-id'));
-        onDelete?.(petId);
+        onDelete(petId);
       },
       [onDelete]
     );
@@ -41,7 +41,7 @@ export const PetList = memo(
       (ev: MouseEvent) => {
         const button = ev.target as HTMLButtonElement;
         const petId = Number(button.getAttribute('data-pet-id'));
-        onEdit?.(petId);
+        onEdit(petId);
       },
       [onEdit]
     );
@@ -66,15 +66,17 @@ export const PetList = memo(
               <th
                 className="custom-table-header-cell edit-row-header"
                 scope="col"
+                aria-hidden
               />
               <th
                 className="custom-table-header-cell delete-row-header"
                 scope="col"
+                aria-hidden
               />
             </tr>
           </thead>
           <tbody className="custom-table-body">
-            {petList?.map((pet) => (
+            {petList.map((pet) => (
               <tr className="custom-table-row" key={pet.petId} aria-label="Pet">
                 <th
                   className="custom-table-first-cell"
@@ -90,7 +92,7 @@ export const PetList = memo(
                   {formatDate(pet.addedDate)}
                 </td>
                 <td className="custom-table-cell" data-testid="col_petKind">
-                  {petKindsByValue?.[pet.kind]?.displayName}
+                  {petKindsByValue[pet.kind]?.displayName}
                 </td>
                 <td className="custom-table-cell">
                   <button
@@ -116,7 +118,7 @@ export const PetList = memo(
             ))}
           </tbody>
         </table>
-        {!petList?.length && <div className="no-items-label">No items.</div>}
+        {!petList.length && <div className="no-items-label">No items.</div>}
       </div>
     );
   }

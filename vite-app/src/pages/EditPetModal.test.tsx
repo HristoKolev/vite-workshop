@@ -1,13 +1,4 @@
 import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  describe,
-  ExpectStatic,
-  test,
-  vi,
-} from 'vitest';
-import {
   act,
   cleanup,
   screen,
@@ -16,26 +7,36 @@ import {
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { setupServer } from 'msw/node';
 import { rest } from 'msw';
+import { setupServer } from 'msw/node';
+import {
+  type ExpectStatic,
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  test,
+  vi,
+} from 'vitest';
 
+import { createReduxStore } from '~redux/createReduxStore';
+import { fetchPetsData } from '~redux/globalSlice';
 import {
   defaultHandlers,
   defaultWaitHandles,
   renderWithProviders,
-} from '../testing/testing-utils';
-import { createReduxStore } from '../redux/createReduxStore';
-import { fetchPetsData } from '../redux/globalSlice';
+} from '~testing/testing-utils';
+import { WaitHandle } from '~testing/wait-handle';
+import { API_URL } from '~utils/api-client';
+
 import { EditPetModal } from './EditPetModal';
-import { API_URL } from '../utils/api-client';
-import { WaitHandle } from '../testing/wait-handle';
 
 vi.mock('../utils/reportError');
 
 const server = setupServer(...defaultHandlers);
 
 beforeAll(() => {
-  server.listen();
+  server.listen({ onUnhandledRequest: 'error' });
 });
 
 afterEach(() => {

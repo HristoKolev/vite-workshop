@@ -1,6 +1,6 @@
-import { afterEach, test, vi } from 'vitest';
 import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { afterEach, test, vi } from 'vitest';
 
 import { mockPetKindsByValue, mockPetList } from '~testing/mock-data';
 

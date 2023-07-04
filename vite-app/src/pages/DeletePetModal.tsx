@@ -1,16 +1,16 @@
-import { memo, useCallback, JSX } from 'react';
+import { type JSX, memo, useCallback } from 'react';
 
-import { Modal } from '../shared/Modal';
-import { PetListItem } from '../utils/server-data-model';
-import { LoadingIndicator } from '../shared/LoadingIndicator';
-import { ErrorIndicator } from '../shared/ErrorIndicator';
-import { useAppDispatch, useAppSelector } from '../redux/createReduxStore';
+import { useAppDispatch, useAppSelector } from '~redux/createReduxStore';
 import {
   deletePetStateSelector,
   deletePetThunk,
   globalSelector,
-} from '../redux/globalSlice';
-import { reportError } from '../utils/reportError';
+} from '~redux/globalSlice';
+import { ErrorIndicator } from '~shared/ErrorIndicator';
+import { LoadingIndicator } from '~shared/LoadingIndicator';
+import { Modal } from '~shared/Modal';
+import { reportError } from '~utils/reportError';
+import type { PetListItem } from '~utils/server-data-model';
 
 import './DeletePetModal.css';
 

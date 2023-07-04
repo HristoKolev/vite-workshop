@@ -1,4 +1,4 @@
-import { memo, ReactNode, useCallback, JSX } from 'react';
+import { type JSX, type ReactNode, memo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 
 import closeModalPng from './close-modal.png';
@@ -21,9 +21,11 @@ const ModalImpl = memo(
 
     return (
       <div className="modal open">
-        <div
-          className="modal-bg modal-exit"
+        <button
+          type="button"
+          className="modal-backdrop"
           data-testid="modal-backdrop"
+          aria-label="Close modal"
           onClick={handleOnClose}
         />
         <div
@@ -32,13 +34,14 @@ const ModalImpl = memo(
           aria-label={ariaLabel}
         >
           {children}
-          <img
-            role="button"
-            src={closeModalPng}
-            className="modal-close modal-exit"
-            alt="Close modal"
+          <button
+            type="button"
+            className="modal-close-button"
+            aria-label="Close modal"
             onClick={handleOnClose}
-          />
+          >
+            <img src={closeModalPng} alt="Close modal" width={30} height={30} />
+          </button>
         </div>
       </div>
     );

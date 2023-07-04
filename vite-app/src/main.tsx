@@ -7,7 +7,7 @@ import { createReduxStore } from './redux/createReduxStore';
 
 import './index.css';
 
-const rootElement = document.getElementById('root') as HTMLElement;
+const rootElement = document.getElementById('root')!;
 
 const store = createReduxStore();
 

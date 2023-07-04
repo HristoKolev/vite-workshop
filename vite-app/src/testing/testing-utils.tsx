@@ -1,12 +1,16 @@
-import { render, RenderOptions, RenderResult } from '@testing-library/react';
-import { RequestHandler, rest } from 'msw';
-import { ReactElement } from 'react';
+import {
+  type RenderOptions,
+  type RenderResult,
+  render,
+} from '@testing-library/react';
+import { type RequestHandler, rest } from 'msw';
+import type { ReactElement } from 'react';
 import { Provider } from 'react-redux';
 
-import { createWaitHandleCollection } from '~testing/wait-handle.ts';
+import { type ReduxStoreType, createReduxStore } from '~redux/createReduxStore';
+import { createWaitHandleCollection } from '~testing/wait-handle';
+import { API_URL } from '~utils/api-client';
 
-import { createReduxStore, ReduxStoreType } from '../redux/createReduxStore';
-import { API_URL } from '../utils/api-client';
 import { mockPetKinds, mockPetList } from './mock-data';
 
 type ExtendedRenderOptions = Omit<RenderOptions, 'queries'> & {

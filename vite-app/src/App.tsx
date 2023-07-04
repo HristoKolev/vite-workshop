@@ -1,8 +1,5 @@
-import { memo, useCallback, useEffect, useState, JSX } from 'react';
+import { type JSX, memo, useCallback, useEffect, useState } from 'react';
 
-import { PetListItem } from './utils/server-data-model';
-import { ErrorIndicator } from './shared/ErrorIndicator';
-import { LoadingIndicator } from './shared/LoadingIndicator';
 import { DeletePetModal } from './pages/DeletePetModal';
 import { EditPetModal } from './pages/EditPetModal';
 import { PetList } from './pages/PetList';
@@ -12,6 +9,9 @@ import {
   globalActions,
   globalSelector,
 } from './redux/globalSlice';
+import { ErrorIndicator } from './shared/ErrorIndicator';
+import { LoadingIndicator } from './shared/LoadingIndicator';
+import type { PetListItem } from './utils/server-data-model';
 
 import './App.css';
 
