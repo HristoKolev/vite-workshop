@@ -20,9 +20,7 @@ test('clicking on the X button calls onClose', async ({ expect }) => {
     </Modal>
   );
 
-  const xButton = screen.getByRole('button', { name: 'Close modal' });
-
-  await user.click(xButton);
+  await user.click(screen.getByTestId('modal-close-button'));
 
   expect(handleOnClose).toBeCalled();
 });
