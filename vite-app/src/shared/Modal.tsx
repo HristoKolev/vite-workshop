@@ -37,6 +37,7 @@ const ModalImpl = memo(
           <button
             type="button"
             className="modal-close-button"
+            data-testid="modal-close-button"
             aria-label="Close modal"
             onClick={handleOnClose}
           >
