@@ -5,7 +5,7 @@ import { App } from './App';
 
 import './main.css';
 
-const rootElement = document.getElementById('root') as HTMLElement;
+const rootElement = document.getElementById('root')!;
 
 ReactDOM.createRoot(rootElement).render(
   <StrictMode>

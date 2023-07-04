@@ -2,7 +2,8 @@
   "root": true,
   "env": {
     "es6": true,
-    "browser": true
+    "browser": true,
+    "node": false
   },
   "extends": [
     "eslint:recommended",
@@ -22,6 +23,7 @@
   ],
   "parserOptions": {
     "ecmaVersion": "latest",
+    "generators": true,
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
@@ -59,6 +61,7 @@
       }
     ],
     "no-param-reassign": "off",
+    "lines-between-class-members": "off",
     "new-with-error/new-with-error": "error",
     "unused-imports/no-unused-imports": "error",
     "no-restricted-imports": [
@@ -157,11 +160,7 @@
     "react/jsx-props-no-spreading": "off",
     "react-refresh/only-export-components": "warn",
     "react/react-in-jsx-scope": "off",
-    "react/function-component-definition": "off",
-    "jsx-a11y/control-has-associated-label": "off",
-    "jsx-a11y/no-static-element-interactions": "off",
-    "jsx-a11y/no-noninteractive-element-to-interactive-role": "off",
-    "jsx-a11y/click-events-have-key-events": "off"
+    "react/function-component-definition": "off"
   },
   "overrides": [
     {
@@ -184,9 +183,9 @@
       },
       "extends": [
         "plugin:@typescript-eslint/recommended",
-        "airbnb-typescript",
-        "plugin:import/typescript",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:@typescript-eslint/strict",
+        "plugin:import/typescript",
         "prettier"
       ],
       "rules": {
@@ -227,6 +226,33 @@
             "checksVoidReturn": false
           }
         ],
+        "@typescript-eslint/return-await": ["error", "in-try-catch"],
+        "@typescript-eslint/prefer-ts-expect-error": "off",
+        "@typescript-eslint/no-use-before-define": [
+          "error",
+          {
+            "classes": true,
+            "functions": true,
+            "variables": true
+          }
+        ],
+        "@typescript-eslint/no-unused-expressions": [
+          "error",
+          {
+            "allowShortCircuit": false,
+            "allowTaggedTemplates": false,
+            "allowTernary": false,
+            "enforceForJSX": false
+          }
+        ],
+        "@typescript-eslint/no-redeclare": "error",
+        "@typescript-eslint/no-shadow": "error",
+        "@typescript-eslint/no-magic-numbers": "off",
+        "@typescript-eslint/no-loop-func": "error",
+        "@typescript-eslint/no-dupe-class-members": "error",
+        "@typescript-eslint/default-param-last": "error",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/prefer-nullish-coalescing": "off",
         "import/no-empty-named-blocks": "error",
         "import/no-named-as-default-member": "error",
         "import/no-unresolved": "error",
@@ -258,7 +284,13 @@
         "no-this-before-super": "error",
         "no-undef": "error",
         "no-unreachable": "error",
-        "valid-typeof": ["error", { "requireStringLiterals": true }]
+        "valid-typeof": ["error", { "requireStringLiterals": true }],
+        "react/jsx-filename-extension": [
+          "error",
+          {
+            "extensions": [".jsx", ".tsx"]
+          }
+        ]
       }
     },
     {
@@ -283,6 +315,9 @@
     {
       // Root level .js/.ts configuration files
       "files": ["./*.js", "./*.ts"],
+      "env": {
+        "node": true
+      },
       "rules": {
         "import/no-default-export": "off",
         "import/no-extraneous-dependencies": [

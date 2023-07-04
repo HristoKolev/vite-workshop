@@ -172,10 +172,14 @@ test: {
 
 - Copy the test setup file and the tests from the `extra` directory 
 
-- Change `tsconfig.node.json` to include `setupTests.ts`
+- Change `tsconfig.node.json` to include `setupTests.ts` and set `strict` to `true`
 
 ```
 "include": ["vite.config.ts", "setupTests.ts"]
+```
+
+```
+"strict": true
 ```
 
 - Add the npm script
@@ -230,7 +234,6 @@ npm run format
 
 ```shell
 npm i -D eslint-config-airbnb
-npm i -D eslint-config-airbnb-typescript
 npm i -D eslint-plugin-deprecation
 npm i -D eslint-config-prettier
 npm i -D eslint-import-resolver-alias

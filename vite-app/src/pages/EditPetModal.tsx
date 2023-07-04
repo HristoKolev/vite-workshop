@@ -19,20 +19,6 @@ import { DeletePetModal } from './DeletePetModal';
 
 import './EditPetModal.css';
 
-export interface EditPetModalProps {
-  onClose?: () => void;
-
-  petId: number | undefined;
-
-  onSaved?: () => void;
-
-  onDeleted?: () => void;
-
-  petKinds: PetKind[];
-
-  petKindsByValue: Map<number, string>;
-}
-
 const getCurrentDate = (): string => {
   const now = new Date();
   return `${now.getFullYear().toString()}-${(now.getMonth() + 1)
@@ -55,6 +41,20 @@ const getFormTitle = (
   }
   return '';
 };
+
+export interface EditPetModalProps {
+  onClose?: () => void;
+
+  petId: number | undefined;
+
+  onSaved?: () => void;
+
+  onDeleted?: () => void;
+
+  petKinds: PetKind[];
+
+  petKindsByValue: Map<number, string>;
+}
 
 export const EditPetModal = memo(
   ({
@@ -180,7 +180,7 @@ export const EditPetModal = memo(
     const formRef = useRef<HTMLFormElement | null>(null);
 
     const handleOnSaveClick = useCallback(async () => {
-      if (formRef.current && formRef.current.reportValidity()) {
+      if (formRef.current?.reportValidity()) {
         try {
           setSavePetLoading(true);
           setSavePetError(false);
@@ -281,7 +281,12 @@ export const EditPetModal = memo(
                     !editingEnabled || Boolean(selectedPet) || savePetLoading
                   }
                 >
-                  <option value="" key="" />
+                  {!kind && (
+                    <option value="" key="">
+                      Please, select a pet kind
+                    </option>
+                  )}
+
                   {petKinds.map((petKind) => (
                     <option value={petKind.value} key={petKind.value}>
                       {petKind.displayName}
