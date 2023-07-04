@@ -1,15 +1,15 @@
-import { beforeEach, afterAll, beforeAll, test, afterEach } from 'vitest'; // Different than jest. Globals are off by default.
 import { cleanup, render, screen } from '@testing-library/react';
-import { setupServer } from 'msw/node';
-import { rest } from 'msw';
 import { format } from 'date-fns';
+import { rest } from 'msw';
+import { setupServer } from 'msw/node';
+import { afterAll, afterEach, beforeAll, beforeEach, test } from 'vitest'; // Different than jest. Globals are off by default.
 
 import { App } from './App';
 
 const server = setupServer(
   rest.get('http://localhost:3001/', (_req, res, ctx) =>
-    res(ctx.text('Hello from the server!')),
-  ),
+    res(ctx.text('Hello from the server!'))
+  )
 );
 
 beforeAll(() => {
@@ -33,7 +33,7 @@ test('App renders data', async ({ expect }) => {
   render(<App />);
   expect(screen.getByText('Hello Vite')).toBeInTheDocument();
   expect(screen.getByTestId('date-label')).toHaveTextContent(
-    format(new Date(), 'dd MMM yyyy'),
+    format(new Date(), 'dd MMM yyyy')
   );
 
   const serverMessage = await screen.findByTestId('server-message');
