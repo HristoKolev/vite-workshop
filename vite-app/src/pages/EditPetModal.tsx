@@ -218,21 +218,18 @@ export const EditPetModal = memo(
       setDeletePet(undefined);
     }, []);
 
-    const handleOnClose = useCallback(() => {
-      if (!selectedPetLoading && !savePetLoading) {
-        onClose?.();
-      }
-    }, [onClose, selectedPetLoading, savePetLoading]);
+    const handleOnClose = useCallback(() => onClose?.(), [onClose]);
 
     const handleOnDeleted = useCallback(() => {
-      handleOnClose();
+      onClose?.();
       onDeleted?.();
-    }, [onDeleted, handleOnClose]);
+    }, [onClose, onDeleted]);
 
     return (
       <Modal
         className="edit-pet-modal"
         onClose={handleOnClose}
+        disableClosing={selectedPetLoading || savePetLoading}
         ariaLabel={selectedPet ? 'View / Edit pet modal' : 'Add pet modal'}
       >
         {deletePet && (

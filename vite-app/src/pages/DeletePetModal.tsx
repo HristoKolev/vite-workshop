@@ -29,11 +29,7 @@ export const DeletePetModal = memo(
     const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
     const [deleteError, setDeleteError] = useState<boolean>(false);
 
-    const handleOnClose = useCallback(() => {
-      if (!deleteLoading) {
-        onClose?.();
-      }
-    }, [deleteLoading, onClose]);
+    const handleOnClose = useCallback(() => onClose?.(), [onClose]);
 
     const handleOnConfirmClick = useCallback(() => {
       void (async () => {
@@ -58,6 +54,7 @@ export const DeletePetModal = memo(
       <Modal
         className="delete-pet-modal"
         onClose={handleOnClose}
+        disableClosing={deleteLoading}
         ariaLabel="Delete pet modal"
       >
         <h1>Are you sure you want to delete this pet?</h1>
