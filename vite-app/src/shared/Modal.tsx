@@ -12,11 +12,19 @@ export interface ModalProps {
 
   ariaLabel?: string;
 
+  disableClosing?: boolean;
+
   onClose?: () => void;
 }
 
 const ModalImpl = memo(
-  ({ children, onClose, className, ariaLabel }: ModalProps): JSX.Element => {
+  ({
+    children,
+    onClose,
+    className,
+    ariaLabel,
+    disableClosing,
+  }: ModalProps): JSX.Element => {
     const handleOnClose = useCallback(() => onClose?.(), [onClose]);
 
     return (
@@ -26,6 +34,7 @@ const ModalImpl = memo(
           className="modal-backdrop"
           data-testid="modal-backdrop"
           aria-label="Close modal"
+          disabled={disableClosing}
           onClick={handleOnClose}
         />
         <div
@@ -39,6 +48,7 @@ const ModalImpl = memo(
             className="modal-close-button"
             data-testid="modal-close-button"
             aria-label="Close modal"
+            disabled={disableClosing}
             onClick={handleOnClose}
           >
             <img src={closeModalPng} alt="Close modal" width={30} height={30} />
