@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "profile": "npm run build && source-map-explorer dist/**/*.js",
     "test": "vitest run",
+    "test:watch": "vitest watch",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "typecheck": "tsc",
