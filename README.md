@@ -182,10 +182,11 @@ test: {
 "strict": true
 ```
 
-- Add the npm script
+- Add the npm scripts
 
 ```
  "test": "vitest run",
+ "test:watch": "vitest watch",
 ```
 
 ## 5 - Prettier
