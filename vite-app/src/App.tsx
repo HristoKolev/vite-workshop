@@ -14,9 +14,9 @@ export const App = (): JSX.Element => {
   }, []);
 
   return (
-    <div className="text">
+    <div className="text text-center">
       <CssBaseline />
-      <div className="text-center">Hello Vite</div>
+      <div>Hello Vite</div>
       <div data-testid="date-label">{formatDate(new Date())}</div>
       {message && <div data-testid="server-message">{message}</div>}
       <div>
