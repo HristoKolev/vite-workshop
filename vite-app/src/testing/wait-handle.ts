@@ -39,7 +39,7 @@ type WaitHandleCollection<T extends string> = {
 };
 
 export function createWaitHandleCollection<
-  T extends string
+  T extends string,
 >(): WaitHandleCollection<T> {
   const map = new Map<string, WaitHandle>();
   return new Proxy(
