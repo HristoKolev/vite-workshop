@@ -14,7 +14,12 @@ npm init -y
 
 - Remove every property except `name`, `version`, `scripts`
 
-- Insert the `private` property with value `true` after the `version` property
+- Add these properties after the `version` property
+
+```
+"type": "module",
+"private": true,
+```
 
 - Remove all scripts from the `scripts` property
 
@@ -367,4 +372,73 @@ npm run lint:fix
   "source.fixAll.eslint": true
 },
 "eslint.validate": ["typescript", "typescriptreact"]
+```
+
+## 09 - Tailwind (OPTIONAL)
+
+- Install the packages
+
+```shell
+npm i -D tailwindcss
+```
+
+- Copy the contents of the `extra/09-tailwind` directory to the root directory of this workshop.
+
+- Add the tailwind directives at the start of `main.css`
+
+```
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+- Use some tailwind utility in your source file. Example: `text-center`.
+
+- Run the `build` npm script to verify that everything works.
+
+```shell
+npm run build
+```
+
+## 15 - MUI (OPTIONAL)
+
+- Install the packages
+
+```shell
+npm i @mui/material @emotion/react @emotion/styled @fontsource/roboto @mui/icons-material
+```
+
+- Import the fonts in `main.tsx`
+
+```
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+```
+
+- Add the MUI baseline component somewhere in `App.tsx`
+
+```jsx
+<CssBaseline />
+```
+
+- Use some MUI component in `App.tsx`. Example:
+
+```
+<div>
+  <Button variant="contained">MUI button</Button>
+</div>
+```
+
+- Run the `build` npm script to verify that everything works.
+
+```shell
+npm run build
+```
+
+- Run the `profile` npm script and examine the visualization.
+
+```shell
+npm run profile
 ```

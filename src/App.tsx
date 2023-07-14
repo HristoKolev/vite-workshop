@@ -1,3 +1,8 @@
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+import { Button, CssBaseline } from '@mui/material';
 import { type JSX, useEffect, useState } from 'react';
 
 import { formatDate } from '~helpers';
@@ -15,12 +20,16 @@ export const App = (): JSX.Element => {
   }, []);
 
   return (
-    <div className="text">
+    <div className="text text-center">
+      <CssBaseline />
       <div>Hello Vite</div>
       <div data-testid="date-label">{formatDate(new Date())}</div>
       {message && <div data-testid="server-message">{message}</div>}
       <div>
         <img src={logoUrl} alt="logo" />
+      </div>
+      <div>
+        <Button variant="contained">MUI button</Button>
       </div>
     </div>
   );
