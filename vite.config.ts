@@ -3,9 +3,8 @@ import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { configDefaults } from 'vitest/config';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
+  plugins: [tsconfigPaths(), react()],
   build: {
     sourcemap: true,
   },
@@ -24,12 +23,17 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./setupTests.ts'],
+    exclude: [...configDefaults.exclude, 'extra'],
     coverage: {
       enabled: true,
       provider: 'istanbul',
       all: true,
       include: ['**/src/**'],
-      exclude: [...configDefaults.coverage.exclude, 'src/main.tsx'],
+      exclude: [
+        ...(configDefaults.coverage.exclude || []),
+        'extra',
+        'src/main.tsx',
+      ],
       lines: 90,
       statements: 90,
       functions: 90,
