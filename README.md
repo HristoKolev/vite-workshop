@@ -374,7 +374,29 @@ npm run lint:fix
 "eslint.validate": ["typescript", "typescriptreact"]
 ```
 
-## 09 - Tailwind (OPTIONAL)
+## 09 - SCSS (OPTIONAL)
+
+- Install the packages
+
+```shell
+npm i -D sass
+```
+
+- Copy the contents of the `extra/10-tailwind` directory to the root directory of this workshop.
+
+- Import the `src\styles.scss` file in `src/main.tsx`.
+
+```js
+import './styles.scss';
+```
+
+- Run the `build` npm script to verify that everything works.
+
+```shell
+npm run build
+```
+
+## 10 - Tailwind (OPTIONAL)
 
 - Install the packages
 
@@ -382,7 +404,7 @@ npm run lint:fix
 npm i -D tailwindcss
 ```
 
-- Copy the contents of the `extra/09-tailwind` directory to the root directory of this workshop.
+- Copy the contents of the `extra/10-tailwind` directory to the root directory of this workshop.
 
 - Add the tailwind directives at the start of `main.css`
 
@@ -400,7 +422,7 @@ npm i -D tailwindcss
 npm run build
 ```
 
-## 15 - MUI (OPTIONAL)
+## 11 - MUI (OPTIONAL)
 
 - Install the packages
 
