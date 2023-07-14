@@ -7,9 +7,11 @@ export const App = (): JSX.Element => {
   const [message, setMessage] = useState<string | undefined>();
 
   useEffect(() => {
-    void fetch('http://localhost:3001/')
+    fetch('http://localhost:3001/')
       .then((res) => res.text())
-      .then(setMessage);
+      .then(setMessage)
+      // eslint-disable-next-line no-console
+      .catch(console.error);
   }, []);
 
   return (
