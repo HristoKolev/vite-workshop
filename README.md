@@ -2,6 +2,119 @@
 
 TODO: Describe what this is, why it exists and how it should be used.
 
+## 0 - NPM package
+
+- Initialize the package
+
+```shell
+npm init -y
+```
+
+- Open `package.json`.
+
+- Remove every property except `name`, `version`, `scripts`.
+
+- Insert the `private` property with value `true` after the `version` property.
+
+## 1 - Vite
+
+- Install the packages
+
+```shell
+npm i -D vite typescript
+```
+
+- Install a package that you want to use in your project.
+
+```shell
+npm i date-fns
+```
+
+- Reorder the properties in `package.json` in order to put `dependencies` above `devDependencies`.
+
+- Copy the contents of the `extra/01-vite` directory to the root directory of this workshop.
+- Add the `start`, `build` and `preview` npm scripts to `package.json`
+
+```
+"start": "vite",
+"build": "vite build",
+"preview": "vite preview",
+```
+
+- Run the `build` npm script and examine the output in the `dist` directory.
+
+```shell
+npm run build
+```
+
+- Run the `preview` npm script to serve the production build in your local environment.
+
+```shell
+npm run preview
+```
+
+- Don't forget to stop the npm script before you proceed with the workshop.
+
+- Run the `start` npm script to start the application in development mode.
+
+```shell
+npm run start
+```
+
+- Don't forget to stop the npm script before you proceed with the workshop.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 0 - Create project
 
 - Create the project using the vite generator
