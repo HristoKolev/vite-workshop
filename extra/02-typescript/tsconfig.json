@@ -9,20 +9,13 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
 
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
-    "pretty": true,
-
-    "baseUrl": "./",
-    "paths": {
-      "~*": ["src/*"],
-      "src/*": ["src/*"]
-    }
+    "pretty": true
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
