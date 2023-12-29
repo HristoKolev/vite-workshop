@@ -26,7 +26,7 @@ import { DeletePetModal } from './DeletePetModal';
 
 import './EditPetModal.css';
 
-export interface EditPetModalProps {
+interface EditPetModalProps {
   onClose?: () => void;
 
   petId?: number;
