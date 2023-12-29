@@ -6,7 +6,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { rest } from 'msw';
+import { HttpResponse, http } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, test, vi } from 'vitest';
 
@@ -100,7 +100,7 @@ test('onClose is called on cancel click', async ({ expect }) => {
 
   await user.click(screen.getByRole('button', { name: 'Cancel' }));
 
-  expect(handleOnClose).toBeCalled();
+  expect(handleOnClose).toHaveBeenCalled();
 });
 
 test('delete pet endpoint is called on confirm click', async ({ expect }) => {
@@ -111,11 +111,11 @@ test('delete pet endpoint is called on confirm click', async ({ expect }) => {
   const waitHandle = new WaitHandle();
 
   server.use(
-    rest.delete(`${API_URL}/pet/:petId`, async (req, res, ctx) => {
+    http.delete(`${API_URL}/pet/:petId`, async ({ params }) => {
       await waitHandle.wait();
-      const petId = Number(req.params.petId);
+      const petId = Number(params.petId);
       onDeletePetEndpoint(petId);
-      return res(ctx.json(mockPetList.find((x) => x.petId === petId)));
+      return HttpResponse.json(mockPetList.find((x) => x.petId === petId));
     })
   );
 
@@ -128,11 +128,11 @@ test('delete pet endpoint is called on confirm click', async ({ expect }) => {
   await waitForElementToBeRemoved(loadingIndicator);
 
   await waitFor(() => {
-    expect(handleOnDeleted).toBeCalled();
+    expect(handleOnDeleted).toHaveBeenCalled();
   });
 
   await waitFor(() => {
-    expect(onDeletePetEndpoint).toBeCalledWith(42);
+    expect(onDeletePetEndpoint).toHaveBeenCalledWith(42);
   });
 });
 
@@ -144,9 +144,9 @@ test('shows error when the delete call fails', async ({ expect }) => {
   const waitHandle = new WaitHandle();
 
   server.use(
-    rest.delete(`${API_URL}/pet/:petId`, async (_req, res, ctx) => {
+    http.delete(`${API_URL}/pet/:petId`, async () => {
       await waitHandle.wait();
-      return res(ctx.status(500));
+      return new HttpResponse(null, { status: 500 });
     })
   );
 
@@ -160,7 +160,7 @@ test('shows error when the delete call fails', async ({ expect }) => {
     expect(screen.getByTestId('error-indicator')).toBeInTheDocument();
   });
 
-  expect(handleOnDeleted).not.toBeCalled();
+  expect(handleOnDeleted).not.toHaveBeenCalled();
 
-  expect(reportError).toBeCalled();
+  expect(reportError).toHaveBeenCalled();
 });
