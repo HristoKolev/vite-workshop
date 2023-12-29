@@ -68,7 +68,7 @@ export const DeletePetModal = memo(
             className="delete-pet-modal-list-item"
             data-testid="delete-modal_petKind"
           >
-            Pet Kind: {petKindsByValue?.[pet.kind]?.displayName}
+            Pet Kind: {petKindsByValue?.[pet.kind]?.displayName || ''}
           </div>
         </div>
 
