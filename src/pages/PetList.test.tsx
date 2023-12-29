@@ -17,7 +17,7 @@ test('shows a message when there are no pets', async ({ expect }) => {
   render(
     <PetList
       petList={[]}
-      petKindsByValue={{}}
+      petKindsByValue={mockPetKindsByValue}
       onEdit={vi.fn}
       onDelete={vi.fn}
     />
