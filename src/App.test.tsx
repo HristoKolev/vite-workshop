@@ -7,7 +7,7 @@ import {
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { rest } from 'msw';
+import { HttpResponse, http } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, test, vi } from 'vitest';
 
@@ -35,7 +35,7 @@ afterAll(() => {
   server.close();
 });
 
-const { getPetKidsWaitHandle } = defaultWaitHandles;
+const { getPetKindsWaitHandle } = defaultWaitHandles;
 
 describe('landing page', () => {
   test('shows app heading', ({ expect }) => {
@@ -49,7 +49,7 @@ describe('landing page', () => {
   test('add pet button is only shown after the first fetch', async ({
     expect,
   }) => {
-    getPetKidsWaitHandle.enable();
+    getPetKindsWaitHandle.enable();
 
     render(<App />);
 
@@ -58,19 +58,19 @@ describe('landing page', () => {
     ).not.toBeInTheDocument();
 
     const loadingIndicator = await screen.findByTestId('loading-indicator');
-    getPetKidsWaitHandle.release();
+    getPetKindsWaitHandle.release();
     await waitForElementToBeRemoved(loadingIndicator);
 
     expect(screen.getByRole('button', { name: 'Add Pet' })).toBeInTheDocument();
   });
 
   test('displays a list of pets', async ({ expect }) => {
-    getPetKidsWaitHandle.enable();
+    getPetKindsWaitHandle.enable();
 
     render(<App />);
 
     const loadingIndicator = await screen.findByTestId('loading-indicator');
-    getPetKidsWaitHandle.release();
+    getPetKindsWaitHandle.release();
     await waitForElementToBeRemoved(loadingIndicator);
 
     const table = await screen.findByRole('table');
@@ -84,9 +84,9 @@ describe('landing page', () => {
     const waitHandle = new WaitHandle();
 
     server.use(
-      rest.get(`${API_URL}/pet/all`, async (_req, res, ctx) => {
+      http.get(`${API_URL}/pet/all`, async () => {
         await waitHandle.wait();
-        return res(ctx.status(500));
+        return new HttpResponse(null, { status: 500 });
       })
     );
 
@@ -107,9 +107,9 @@ describe('landing page', () => {
     const waitHandle = new WaitHandle();
 
     server.use(
-      rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
+      http.get(`${API_URL}/pet/kinds`, async () => {
         await waitHandle.wait();
-        return res(ctx.status(500));
+        return new HttpResponse(null, { status: 500 });
       })
     );
 
@@ -226,13 +226,13 @@ describe('re-fresh pet list', () => {
     const onPetKindsEndpoint = vi.fn();
 
     server.use(
-      rest.get(`${API_URL}/pet/all`, async (_req, res, ctx) => {
+      http.get(`${API_URL}/pet/all`, () => {
         onPetListEndpoint();
-        return res(ctx.json([]));
+        return HttpResponse.json([]);
       }),
-      rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
+      http.get(`${API_URL}/pet/kinds`, () => {
         onPetKindsEndpoint();
-        return res(ctx.json([]));
+        return HttpResponse.json([]);
       })
     );
 
@@ -241,11 +241,11 @@ describe('re-fresh pet list', () => {
     );
 
     await waitFor(() => {
-      expect(onPetListEndpoint).toBeCalled();
+      expect(onPetListEndpoint).toHaveBeenCalled();
     });
 
     await waitFor(() => {
-      expect(onPetKindsEndpoint).not.toBeCalled();
+      expect(onPetKindsEndpoint).not.toHaveBeenCalled();
     });
   });
 
@@ -279,13 +279,13 @@ describe('re-fresh pet list', () => {
     const onPetKindsEndpoint = vi.fn();
 
     server.use(
-      rest.get(`${API_URL}/pet/all`, async (_req, res, ctx) => {
+      http.get(`${API_URL}/pet/all`, () => {
         onPetListEndpoint();
-        return res(ctx.json([]));
+        return HttpResponse.json([]);
       }),
-      rest.get(`${API_URL}/pet/kinds`, async (_req, res, ctx) => {
+      http.get(`${API_URL}/pet/kinds`, () => {
         onPetKindsEndpoint();
-        return res(ctx.json([]));
+        return HttpResponse.json([]);
       })
     );
 
@@ -294,11 +294,11 @@ describe('re-fresh pet list', () => {
     );
 
     await waitFor(() => {
-      expect(onPetListEndpoint).toBeCalled();
+      expect(onPetListEndpoint).toHaveBeenCalled();
     });
 
     await waitFor(() => {
-      expect(onPetKindsEndpoint).not.toBeCalled();
+      expect(onPetKindsEndpoint).not.toHaveBeenCalled();
     });
   });
 });

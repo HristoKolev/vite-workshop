@@ -7,7 +7,7 @@ import {
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { rest } from 'msw';
+import { HttpResponse, http } from 'msw';
 import { setupServer } from 'msw/node';
 import {
   type ExpectStatic,
@@ -199,9 +199,9 @@ test('shows error indicator when pet request fails', async ({ expect }) => {
   renderEditModal({
     registerHandlers: () => {
       server.use(
-        rest.get(`${API_URL}/pet/:petId`, async (_req, res, ctx) => {
+        http.get(`${API_URL}/pet/:petId`, async () => {
           await waitHandle.wait();
-          return res(ctx.status(500));
+          return new HttpResponse(null, { status: 500 });
         })
       );
     },
@@ -237,7 +237,7 @@ test('onClosed is called on successful delete operation', async ({
 
   await user.click(confirmButton);
 
-  expect(handleOnClose).toBeCalled();
+  expect(handleOnClose).toHaveBeenCalled();
 });
 
 test('onClosed is called when cancel button is clicked', async ({ expect }) => {
@@ -249,7 +249,7 @@ test('onClosed is called when cancel button is clicked', async ({ expect }) => {
 
   await user.click(cancelButton);
 
-  expect(handleOnClose).toBeCalled();
+  expect(handleOnClose).toHaveBeenCalled();
 });
 
 test('transitions the form into edit mode when the edit button is clicked', async ({
@@ -394,9 +394,9 @@ test('cancel button resets the state successfully after failed update request', 
   const waitHandle = new WaitHandle();
 
   server.use(
-    rest.put(`${API_URL}/pet/:petId`, async (_req, res, ctx) => {
+    http.put(`${API_URL}/pet/:petId`, async () => {
       await waitHandle.wait();
-      return res(ctx.status(500));
+      return new HttpResponse(null, { status: 500 });
     })
   );
 
@@ -448,15 +448,15 @@ test('will not submit data if input validation fails', async ({ expect }) => {
   const updateEndpointFunc = vi.fn();
 
   server.use(
-    rest.put(`${API_URL}/pet/:petId`, async (_req, res, ctx) => {
+    http.put(`${API_URL}/pet/:petId`, () => {
       updateEndpointFunc();
-      return res(ctx.json({}));
+      return HttpResponse.json({});
     })
   );
 
   await user.click(screen.getByRole('button', { name: 'Save' }));
 
-  expect(updateEndpointFunc).not.toBeCalled();
+  expect(updateEndpointFunc).not.toHaveBeenCalled();
 
   verifyEditMode({ expect });
 });
@@ -492,9 +492,9 @@ describe('add mode', () => {
     renderEditModal({
       registerHandlers: () => {
         server.use(
-          rest.post(`${API_URL}/pet`, async (_req, res, ctx) => {
+          http.post(`${API_URL}/pet`, async () => {
             await waitHandle.wait();
-            return res(ctx.status(500));
+            return new HttpResponse(null, { status: 500 });
           })
         );
       },
@@ -549,7 +549,7 @@ describe('add mode', () => {
 
     await user.click(cancelButton);
 
-    expect(handleOnClose).toBeCalled();
+    expect(handleOnClose).toHaveBeenCalled();
   });
 
   test('once pet kind is selected the empty option is removed from the list', async ({
