@@ -11,9 +11,9 @@
     "profile": "npm run build && source-map-explorer dist/**/*.js",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "format": "prettier --write .",
-    "format-check": "prettier --check .",
-    "lint": "eslint ./ --max-warnings 0",
+    "format": "prettier --cache --write .",
+    "format-check": "prettier --cache --check .",
+    "lint": "eslint ./ --cache --cache-location ./node_modules/.cache/eslint/ --max-warnings 0",
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
