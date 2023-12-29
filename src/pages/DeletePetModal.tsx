@@ -45,8 +45,8 @@ export const DeletePetModal = memo(
     return (
       <Modal
         className="delete-pet-modal"
-        disableClosing={deleteLoading}
         onClose={handleOnClose}
+        disableClosing={deleteLoading}
         ariaLabel="Delete pet modal"
       >
         <h1>Are you sure you want to delete this pet?</h1>
