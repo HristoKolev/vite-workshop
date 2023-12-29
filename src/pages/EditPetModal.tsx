@@ -42,7 +42,7 @@ const getFormTitle = (
   return '';
 };
 
-export interface EditPetModalProps {
+interface EditPetModalProps {
   onClose?: () => void;
 
   petId: number | undefined;

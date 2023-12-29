@@ -11,7 +11,7 @@ const formatDate = (date: string): string =>
     year: 'numeric',
   });
 
-export interface PetsListProps {
+interface PetsListProps {
   onEdit: (petId: number) => void;
 
   onDelete: (petId: number) => void;

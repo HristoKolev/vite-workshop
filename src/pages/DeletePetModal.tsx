@@ -9,7 +9,7 @@ import type { PetListItem } from '~utils/server-data-model';
 
 import './DeletePetModal.css';
 
-export interface DeletePetModalProps {
+interface DeletePetModalProps {
   onClose?: () => void;
 
   pet: PetListItem;
