@@ -1,14 +1,14 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { format } from 'date-fns';
-import { rest } from 'msw';
+import { HttpResponse, http } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, beforeEach, test } from 'vitest'; // Different than jest. Globals are off by default.
 
 import { App } from './App';
 
 const server = setupServer(
-  rest.get('http://localhost:3001/', (_req, res, ctx) =>
-    res(ctx.text('Hello from the server!'))
+  http.get('http://localhost:3001/', () =>
+    HttpResponse.text('Hello from the server!')
   )
 );
 
