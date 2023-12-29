@@ -64,14 +64,14 @@ export const PetList = memo(
                 Kind
               </th>
               <th
-                aria-hidden
                 className="custom-table-header-cell edit-row-header"
                 scope="col"
+                aria-hidden
               />
               <th
-                aria-hidden
                 className="custom-table-header-cell delete-row-header"
                 scope="col"
+                aria-hidden
               />
             </tr>
           </thead>
