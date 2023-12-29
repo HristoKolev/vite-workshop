@@ -228,8 +228,8 @@ export const EditPetModal = memo(
     return (
       <Modal
         className="edit-pet-modal"
-        onClose={handleOnClose}
         disableClosing={selectedPetLoading || savePetLoading}
+        onClose={handleOnClose}
         ariaLabel={selectedPet ? 'View / Edit pet modal' : 'Add pet modal'}
       >
         {deletePet && (
