@@ -72,7 +72,7 @@ test('calls onDelete when the user clicks on the delete button', async ({
 
   await user.click(within(row).getByRole('button', { name: 'Delete' }));
 
-  expect(handleOnDelete).toBeCalledWith(42);
+  expect(handleOnDelete).toHaveBeenCalledWith(42);
 });
 
 test('calls onEdit when the user clicks on the edit button', async ({
@@ -96,5 +96,5 @@ test('calls onEdit when the user clicks on the edit button', async ({
 
   await user.click(within(row).getByRole('button', { name: 'View / Edit' }));
 
-  expect(handleOnEdit).toBeCalledWith(42);
+  expect(handleOnEdit).toHaveBeenCalledWith(42);
 });
