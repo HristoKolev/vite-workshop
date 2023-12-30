@@ -306,6 +306,7 @@
       "plugins": ["vitest"],
       "extends": ["plugin:vitest/recommended", "plugin:testing-library/react"],
       "rules": {
+        "testing-library/no-manual-cleanup": "off",
         "testing-library/no-wait-for-multiple-assertions": "off",
         "vitest/expect-expect": "off",
         "import/no-extraneous-dependencies": [

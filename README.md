@@ -254,12 +254,20 @@ test: {
       'extra',
       'src/main.tsx',
     ],
-    lines: 90,
-    statements: 90,
-    functions: 90,
-    branches: 90,
+    thresholds: {
+      lines: 90,
+      statements: 90,
+      functions: 90,
+      branches: 90,
+    },
   },
 },
+```
+
+- Change `tsconfig.json` to include `setupTests.ts`
+
+```
+"include": ["src", "setupTests.ts"],
 ```
 
 - Change `tsconfig.node.json` to include `setupTests.ts`
