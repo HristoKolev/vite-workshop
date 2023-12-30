@@ -17,7 +17,7 @@ import {
   renderWithProviders,
 } from './testing/utils';
 import { WaitHandle } from './testing/wait-handle';
-import { API_URL } from './utils/api-client';
+import { BASE_URL } from './utils/api-client';
 
 vi.mock('./utils/reportError');
 
@@ -87,7 +87,7 @@ describe('landing page', () => {
     const waitHandle = new WaitHandle();
 
     server.use(
-      http.get(`${API_URL}/pet/all`, async () => {
+      http.get(`${BASE_URL}/pet/all`, async () => {
         await waitHandle.wait();
         return new HttpResponse(null, { status: 500 });
       })
@@ -110,7 +110,7 @@ describe('landing page', () => {
     const waitHandle = new WaitHandle();
 
     server.use(
-      http.get(`${API_URL}/pet/kinds`, async () => {
+      http.get(`${BASE_URL}/pet/kinds`, async () => {
         await waitHandle.wait();
         return new HttpResponse(null, { status: 500 });
       })
@@ -144,7 +144,7 @@ describe('modals', () => {
     );
 
     const editModal = await screen.findByRole('dialog', {
-      name: 'View / Edit pet modal',
+      name: 'View pet modal',
     });
 
     expect(editModal).toBeInTheDocument();
@@ -229,11 +229,11 @@ describe('re-fresh pet list', () => {
     const onPetKindsEndpoint = vi.fn();
 
     server.use(
-      http.get(`${API_URL}/pet/all`, () => {
+      http.get(`${BASE_URL}/pet/all`, () => {
         onPetListEndpoint();
         return HttpResponse.json([]);
       }),
-      http.get(`${API_URL}/pet/kinds`, () => {
+      http.get(`${BASE_URL}/pet/kinds`, () => {
         onPetKindsEndpoint();
         return HttpResponse.json([]);
       })
@@ -265,7 +265,7 @@ describe('re-fresh pet list', () => {
     await user.click(within(row).getByRole('button', { name: 'View / Edit' }));
 
     const editModal = await screen.findByRole('dialog', {
-      name: 'View / Edit pet modal',
+      name: 'View pet modal',
     });
 
     await user.click(within(editModal).getByRole('button', { name: 'Edit' }));
@@ -282,11 +282,11 @@ describe('re-fresh pet list', () => {
     const onPetKindsEndpoint = vi.fn();
 
     server.use(
-      http.get(`${API_URL}/pet/all`, () => {
+      http.get(`${BASE_URL}/pet/all`, () => {
         onPetListEndpoint();
         return HttpResponse.json([]);
       }),
-      http.get(`${API_URL}/pet/kinds`, () => {
+      http.get(`${BASE_URL}/pet/kinds`, () => {
         onPetKindsEndpoint();
         return HttpResponse.json([]);
       })

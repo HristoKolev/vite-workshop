@@ -22,7 +22,7 @@ test('clicking on the X button calls onClose', async ({ expect }) => {
 
   await user.click(screen.getByTestId('modal-close-button'));
 
-  expect(handleOnClose).toBeCalled();
+  expect(handleOnClose).toHaveBeenCalled();
 });
 
 test('clicking on the backdrop calls onClose', async ({ expect }) => {
@@ -38,7 +38,7 @@ test('clicking on the backdrop calls onClose', async ({ expect }) => {
 
   await user.click(screen.getByTestId('modal-backdrop'));
 
-  expect(handleOnClose).toBeCalled();
+  expect(handleOnClose).toHaveBeenCalled();
 });
 
 test("clicking on the X button when disableClosing is doesn't call onClose", async ({
@@ -56,7 +56,7 @@ test("clicking on the X button when disableClosing is doesn't call onClose", asy
 
   await user.click(screen.getByTestId('modal-close-button'));
 
-  expect(handleOnClose).not.toBeCalled();
+  expect(handleOnClose).not.toHaveBeenCalled();
 });
 
 test("clicking on the backdrop when disableClosing is doesn't call onClose", async ({
@@ -74,5 +74,5 @@ test("clicking on the backdrop when disableClosing is doesn't call onClose", asy
 
   await user.click(screen.getByTestId('modal-backdrop'));
 
-  expect(handleOnClose).not.toBeCalled();
+  expect(handleOnClose).not.toHaveBeenCalled();
 });
