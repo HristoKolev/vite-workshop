@@ -21,9 +21,9 @@
     "baseUrl": "./",
     "paths": {
       "~*": ["src/*"],
-      "src/*": ["src/*"]
-    }
+      "src/*": ["src/*"],
+    },
   },
   "include": ["src", "setupTests.ts"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
 }
