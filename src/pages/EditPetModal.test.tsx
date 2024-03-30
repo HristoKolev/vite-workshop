@@ -10,11 +10,11 @@ import userEvent from '@testing-library/user-event';
 import { HttpResponse, http } from 'msw';
 import { setupServer } from 'msw/node';
 import {
-  type ExpectStatic,
   afterAll,
   afterEach,
   beforeAll,
   describe,
+  expect,
   test,
   vi,
 } from 'vitest';
@@ -90,7 +90,7 @@ const renderEditModal = async (options?: RenderEditModalOptions) => {
   };
 };
 
-const verifyDisplayMode = async ({ expect }: { expect: ExpectStatic }) => {
+const verifyDisplayMode = async () => {
   await waitFor(() => {
     expect(
       screen.getByRole('heading', { name: 'View pet' })
@@ -124,7 +124,7 @@ const verifyDisplayMode = async ({ expect }: { expect: ExpectStatic }) => {
   expect(notesField).toBeDisabled();
 };
 
-const verifyEditMode = ({ expect }: { expect: ExpectStatic }) => {
+const verifyEditMode = () => {
   expect(screen.getByRole('heading', { name: 'Edit pet' })).toBeInTheDocument();
 
   const saveButton = screen.getByRole('button', { name: 'Save' });
@@ -152,7 +152,7 @@ const verifyEditMode = ({ expect }: { expect: ExpectStatic }) => {
   expect(notesField).toBeEnabled();
 };
 
-const verifyAddMode = ({ expect }: { expect: ExpectStatic }) => {
+const verifyAddMode = () => {
   expect(screen.getByRole('heading', { name: 'Add pet' })).toBeInTheDocument();
 
   const saveButton = screen.getByRole('button', { name: 'Save' });
@@ -180,7 +180,7 @@ const verifyAddMode = ({ expect }: { expect: ExpectStatic }) => {
   expect(notesField).toBeEnabled();
 };
 
-const verifyDefaultFieldValues = ({ expect }: { expect: ExpectStatic }) => {
+const verifyDefaultFieldValues = () => {
   expect(screen.getByLabelText('Name:')).toHaveValue('Gosho');
   expect(screen.getByLabelText('Kind:')).toHaveValue('1');
   expect(screen.getByLabelText('Age:')).toHaveValue(2);
@@ -189,9 +189,7 @@ const verifyDefaultFieldValues = ({ expect }: { expect: ExpectStatic }) => {
   expect(screen.getByLabelText('Notes:')).toHaveValue('White fur, very soft.');
 };
 
-test('edit modal defaults to view mode when called with a valid pet id', async ({
-  expect,
-}) => {
+test('edit modal defaults to view mode when called with a valid pet id', async () => {
   getPetWaitHandle.enable();
 
   await renderEditModal();
@@ -200,10 +198,10 @@ test('edit modal defaults to view mode when called with a valid pet id', async (
   getPetWaitHandle.release();
   await waitForElementToBeRemoved(loadingIndicator);
 
-  await verifyDisplayMode({ expect });
+  await verifyDisplayMode();
 });
 
-test('shows error indicator when pet request fails', async ({ expect }) => {
+test('shows error indicator when pet request fails', async () => {
   const waitHandle = new WaitHandle();
 
   await renderEditModal({
@@ -226,9 +224,7 @@ test('shows error indicator when pet request fails', async ({ expect }) => {
   });
 });
 
-test('onClosed is called on successful delete operation', async ({
-  expect,
-}) => {
+test('onClosed is called on successful delete operation', async () => {
   const user = userEvent.setup();
 
   const { handleOnClose } = await renderEditModal();
@@ -250,7 +246,7 @@ test('onClosed is called on successful delete operation', async ({
   expect(handleOnClose).toHaveBeenCalled();
 });
 
-test('onClosed is called when cancel button is clicked', async ({ expect }) => {
+test('onClosed is called when cancel button is clicked', async () => {
   const user = userEvent.setup();
 
   const { handleOnClose } = await renderEditModal();
@@ -262,9 +258,7 @@ test('onClosed is called when cancel button is clicked', async ({ expect }) => {
   expect(handleOnClose).toHaveBeenCalled();
 });
 
-test('transitions the form into edit mode when the edit button is clicked', async ({
-  expect,
-}) => {
+test('transitions the form into edit mode when the edit button is clicked', async () => {
   const user = userEvent.setup();
 
   await renderEditModal();
@@ -273,12 +267,10 @@ test('transitions the form into edit mode when the edit button is clicked', asyn
 
   await user.click(editButton);
 
-  verifyEditMode({ expect });
+  verifyEditMode();
 });
 
-test('transitions back to display mode when the cancel button is clicked', async ({
-  expect,
-}) => {
+test('transitions back to display mode when the cancel button is clicked', async () => {
   const user = userEvent.setup();
 
   await renderEditModal();
@@ -293,7 +285,7 @@ test('transitions back to display mode when the cancel button is clicked', async
 
   await user.click(cancelButton);
 
-  await verifyDisplayMode({ expect });
+  await verifyDisplayMode();
 });
 
 const changeEditFormFields = async (
@@ -313,9 +305,7 @@ const changeEditFormFields = async (
   await user.type(notesField, 'Notes 123');
 };
 
-test('clicking save transitions the form to display mode', async ({
-  expect,
-}) => {
+test('clicking save transitions the form to display mode', async () => {
   const user = userEvent.setup();
 
   await renderEditModal();
@@ -334,7 +324,7 @@ test('clicking save transitions the form to display mode', async ({
   updatePetWaitHandle.release();
   await waitForElementToBeRemoved(loadingIndicator);
 
-  await verifyDisplayMode({ expect });
+  await verifyDisplayMode();
 
   expect(screen.getByLabelText('Name:')).toHaveValue('test123');
   expect(screen.getByLabelText('Kind:')).toHaveValue('1');
@@ -344,7 +334,7 @@ test('clicking save transitions the form to display mode', async ({
   expect(screen.getByLabelText('Notes:')).toHaveValue('Notes 123');
 });
 
-test('delete modal is closed after cancel is clicked', async ({ expect }) => {
+test('delete modal is closed after cancel is clicked', async () => {
   const user = userEvent.setup();
 
   await renderEditModal();
@@ -370,9 +360,7 @@ test('delete modal is closed after cancel is clicked', async ({ expect }) => {
   });
 });
 
-test('form is returned to display mode when the cancel button is clicked', async ({
-  expect,
-}) => {
+test('form is returned to display mode when the cancel button is clicked', async () => {
   const user = userEvent.setup();
 
   await renderEditModal();
@@ -385,14 +373,12 @@ test('form is returned to display mode when the cancel button is clicked', async
 
   await user.click(cancelButton);
 
-  await verifyDisplayMode({ expect });
+  await verifyDisplayMode();
 
-  verifyDefaultFieldValues({ expect });
+  verifyDefaultFieldValues();
 });
 
-test('cancel button resets the state successfully after failed update request', async ({
-  expect,
-}) => {
+test('cancel button resets the state successfully after failed update request', async () => {
   const user = userEvent.setup();
 
   await renderEditModal();
@@ -426,16 +412,16 @@ test('cancel button resets the state successfully after failed update request', 
 
   await user.click(cancelButton);
 
-  await verifyDisplayMode({ expect });
+  await verifyDisplayMode();
 
-  verifyDefaultFieldValues({ expect });
+  verifyDefaultFieldValues();
 
   await waitFor(() => {
     expect(screen.queryByTestId('error-indicator')).not.toBeInTheDocument();
   });
 });
 
-test('will not submit data if input validation fails', async ({ expect }) => {
+test('will not submit data if input validation fails', async () => {
   const reportValidityMock = vi.spyOn(
     HTMLFormElement.prototype,
     'reportValidity'
@@ -468,7 +454,7 @@ test('will not submit data if input validation fails', async ({ expect }) => {
 
   expect(updateEndpointFunc).not.toHaveBeenCalled();
 
-  verifyEditMode({ expect });
+  verifyEditMode();
 });
 
 describe('add mode', () => {
@@ -492,9 +478,7 @@ describe('add mode', () => {
     await user.type(notesField, 'Notes 123');
   };
 
-  test('error indicator is shown when the add request fails', async ({
-    expect,
-  }) => {
+  test('error indicator is shown when the add request fails', async () => {
     const user = userEvent.setup();
 
     const waitHandle = new WaitHandle();
@@ -511,7 +495,7 @@ describe('add mode', () => {
       addMode: true,
     });
 
-    verifyAddMode({ expect });
+    verifyAddMode();
 
     await fillForm(user);
 
@@ -528,16 +512,14 @@ describe('add mode', () => {
     });
   });
 
-  test('transitions to display mode after successful save', async ({
-    expect,
-  }) => {
+  test('transitions to display mode after successful save', async () => {
     const user = userEvent.setup();
 
     await renderEditModal({
       addMode: true,
     });
 
-    verifyAddMode({ expect });
+    verifyAddMode();
 
     await fillForm(user);
 
@@ -545,10 +527,10 @@ describe('add mode', () => {
 
     await user.click(saveButton);
 
-    await verifyDisplayMode({ expect });
+    await verifyDisplayMode();
   });
 
-  test('cancel button calls onClose', async ({ expect }) => {
+  test('cancel button calls onClose', async () => {
     const user = userEvent.setup();
 
     const { handleOnClose } = await renderEditModal({
@@ -562,9 +544,7 @@ describe('add mode', () => {
     expect(handleOnClose).toHaveBeenCalled();
   });
 
-  test('once pet kind is selected the empty option is removed from the list', async ({
-    expect,
-  }) => {
+  test('once pet kind is selected the empty option is removed from the list', async () => {
     const user = userEvent.setup();
 
     await renderEditModal({ addMode: true });

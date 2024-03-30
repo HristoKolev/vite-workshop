@@ -8,7 +8,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { HttpResponse, http } from 'msw';
 import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, test, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, expect, test, vi } from 'vitest';
 
 import { createReduxStore } from '~redux/createReduxStore';
 import { fetchPetsData } from '~redux/globalSlice';
@@ -71,7 +71,7 @@ const renderDeleteModal = async () => {
   };
 };
 
-test('shows heading and pet data', async ({ expect }) => {
+test('shows heading and pet data', async () => {
   await renderDeleteModal();
 
   expect(
@@ -93,7 +93,7 @@ test('shows heading and pet data', async ({ expect }) => {
   );
 });
 
-test('onClose is called on cancel click', async ({ expect }) => {
+test('onClose is called on cancel click', async () => {
   const user = userEvent.setup();
 
   const { handleOnClose } = await renderDeleteModal();
@@ -103,7 +103,7 @@ test('onClose is called on cancel click', async ({ expect }) => {
   expect(handleOnClose).toHaveBeenCalled();
 });
 
-test('delete pet endpoint is called on confirm click', async ({ expect }) => {
+test('delete pet endpoint is called on confirm click', async () => {
   const user = userEvent.setup();
 
   const onDeletePetEndpoint = vi.fn();
@@ -136,7 +136,7 @@ test('delete pet endpoint is called on confirm click', async ({ expect }) => {
   });
 });
 
-test('shows error when the delete call fails', async ({ expect }) => {
+test('shows error when the delete call fails', async () => {
   const user = userEvent.setup();
 
   const { handleOnDeleted } = await renderDeleteModal();

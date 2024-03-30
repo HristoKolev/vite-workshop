@@ -1,6 +1,6 @@
 import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, test, vi } from 'vitest';
+import { afterEach, expect, test, vi } from 'vitest';
 
 import { mockPetKindsByValue, mockPetList } from '~testing/mock-data';
 
@@ -13,7 +13,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-test('shows a message when there are no pets', async ({ expect }) => {
+test('shows a message when there are no pets', async () => {
   render(
     <PetList
       petList={[]}
@@ -30,7 +30,7 @@ test('shows a message when there are no pets', async ({ expect }) => {
   expect(screen.getByText('No items.')).toBeInTheDocument();
 });
 
-test('row shows pet list item data', async ({ expect }) => {
+test('row shows pet list item data', async () => {
   render(
     <PetList
       petList={mockPetList}
@@ -51,9 +51,7 @@ test('row shows pet list item data', async ({ expect }) => {
   expect(within(row).getByTestId('col_petKind')).toHaveTextContent('Cat');
 });
 
-test('calls onDelete when the user clicks on the delete button', async ({
-  expect,
-}) => {
+test('calls onDelete when the user clicks on the delete button', async () => {
   const user = userEvent.setup();
 
   const handleOnDelete = vi.fn();
@@ -75,9 +73,7 @@ test('calls onDelete when the user clicks on the delete button', async ({
   expect(handleOnDelete).toHaveBeenCalledWith(42);
 });
 
-test('calls onEdit when the user clicks on the edit button', async ({
-  expect,
-}) => {
+test('calls onEdit when the user clicks on the edit button', async () => {
   const user = userEvent.setup();
 
   const handleOnEdit = vi.fn();
