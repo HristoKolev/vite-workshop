@@ -2,7 +2,14 @@ import { cleanup, render, screen } from '@testing-library/react';
 import { format } from 'date-fns';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, beforeEach, test } from 'vitest'; // Different than jest. Globals are off by default.
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  expect,
+  test,
+} from 'vitest'; // Different than jest. Globals are off by default.
 
 import { App } from './App';
 
@@ -28,8 +35,7 @@ afterAll(() => {
   server.close();
 });
 
-// Different than jest. You need to read `expect` from params.
-test('App renders data', async ({ expect }) => {
+test('App renders data', async () => {
   render(<App />);
   expect(screen.getByText('Hello Vite')).toBeInTheDocument();
   expect(screen.getByTestId('date-label')).toHaveTextContent(
