@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, test, vi } from 'vitest';
+import { afterEach, expect, test, vi } from 'vitest';
 
 import { Modal } from './Modal';
 
@@ -9,7 +9,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-test('clicking on the X button calls onClose', async ({ expect }) => {
+test('clicking on the X button calls onClose', async () => {
   const user = userEvent.setup();
 
   const handleOnClose = vi.fn();
@@ -25,7 +25,7 @@ test('clicking on the X button calls onClose', async ({ expect }) => {
   expect(handleOnClose).toHaveBeenCalled();
 });
 
-test('clicking on the backdrop calls onClose', async ({ expect }) => {
+test('clicking on the backdrop calls onClose', async () => {
   const user = userEvent.setup();
 
   const handleOnClose = vi.fn();
@@ -41,9 +41,7 @@ test('clicking on the backdrop calls onClose', async ({ expect }) => {
   expect(handleOnClose).toHaveBeenCalled();
 });
 
-test("clicking on the X button when disableClosing is doesn't call onClose", async ({
-  expect,
-}) => {
+test("clicking on the X button when disableClosing is doesn't call onClose", async () => {
   const user = userEvent.setup();
 
   const handleOnClose = vi.fn();
@@ -59,9 +57,7 @@ test("clicking on the X button when disableClosing is doesn't call onClose", asy
   expect(handleOnClose).not.toHaveBeenCalled();
 });
 
-test("clicking on the backdrop when disableClosing is doesn't call onClose", async ({
-  expect,
-}) => {
+test("clicking on the backdrop when disableClosing is doesn't call onClose", async () => {
   const user = userEvent.setup();
 
   const handleOnClose = vi.fn();

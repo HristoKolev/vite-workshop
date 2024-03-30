@@ -9,7 +9,15 @@ import {
 import userEvent from '@testing-library/user-event';
 import { HttpResponse, http } from 'msw';
 import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, test, vi } from 'vitest';
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  expect,
+  test,
+  vi,
+} from 'vitest';
 
 import { App } from './App';
 import { defaultHandlers, defaultWaitHandles } from './testing/utils';
@@ -38,7 +46,7 @@ afterAll(() => {
 const { getPetKindsWaitHandle } = defaultWaitHandles;
 
 describe('landing page', () => {
-  test('shows app heading', ({ expect }) => {
+  test('shows app heading', () => {
     render(<App />);
 
     expect(
@@ -46,9 +54,7 @@ describe('landing page', () => {
     ).toBeInTheDocument();
   });
 
-  test('add pet button is only shown after the first fetch', async ({
-    expect,
-  }) => {
+  test('add pet button is only shown after the first fetch', async () => {
     getPetKindsWaitHandle.enable();
 
     render(<App />);
@@ -64,7 +70,7 @@ describe('landing page', () => {
     expect(screen.getByRole('button', { name: 'Add Pet' })).toBeInTheDocument();
   });
 
-  test('displays a list of pets', async ({ expect }) => {
+  test('displays a list of pets', async () => {
     getPetKindsWaitHandle.enable();
 
     render(<App />);
@@ -78,9 +84,7 @@ describe('landing page', () => {
     expect(within(table).getAllByRole('row', { name: 'Pet' })).toHaveLength(3);
   });
 
-  test('shows an error indicator when the all pets endpoint fails', async ({
-    expect,
-  }) => {
+  test('shows an error indicator when the all pets endpoint fails', async () => {
     const waitHandle = new WaitHandle();
 
     server.use(
@@ -101,9 +105,7 @@ describe('landing page', () => {
     });
   });
 
-  test('shows an error indicator when the pet kinds endpoint fails', async ({
-    expect,
-  }) => {
+  test('shows an error indicator when the pet kinds endpoint fails', async () => {
     const waitHandle = new WaitHandle();
 
     server.use(
@@ -126,9 +128,7 @@ describe('landing page', () => {
 });
 
 describe('modals', () => {
-  test('view / edit button brings up the details modal and cancel closes it', async ({
-    expect,
-  }) => {
+  test('view / edit button brings up the details modal and cancel closes it', async () => {
     const user = userEvent.setup();
 
     render(<App />);
@@ -153,9 +153,7 @@ describe('modals', () => {
     });
   });
 
-  test('delete button brings up the delete modal and cancel closes it', async ({
-    expect,
-  }) => {
+  test('delete button brings up the delete modal and cancel closes it', async () => {
     const user = userEvent.setup();
 
     render(<App />);
@@ -180,9 +178,7 @@ describe('modals', () => {
     });
   });
 
-  test('add buttons brings up the add modal and cancel closes it', async ({
-    expect,
-  }) => {
+  test('add buttons brings up the add modal and cancel closes it', async () => {
     const user = userEvent.setup();
 
     render(<App />);
@@ -206,9 +202,7 @@ describe('modals', () => {
 });
 
 describe('re-fresh pet list', () => {
-  test('re-fetches the list of pets when a pet is deleted', async ({
-    expect,
-  }) => {
+  test('re-fetches the list of pets when a pet is deleted', async () => {
     const user = userEvent.setup();
 
     render(<App />);
@@ -249,9 +243,7 @@ describe('re-fresh pet list', () => {
     });
   });
 
-  test('re-fetches the list of pets when a pet is saved', async ({
-    expect,
-  }) => {
+  test('re-fetches the list of pets when a pet is saved', async () => {
     const user = userEvent.setup();
 
     render(<App />);
