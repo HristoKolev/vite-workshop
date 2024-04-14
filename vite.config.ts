@@ -26,7 +26,7 @@ export default defineConfig({
     exclude: [...configDefaults.exclude, 'extra'],
     coverage: {
       enabled: true,
-      provider: 'istanbul',
+      provider: 'v8',
       all: true,
       include: ['**/src/**'],
       exclude: [
