@@ -24,6 +24,10 @@ const compat = new FlatCompat({
   baseDirectory: path.dirname(fileURLToPath(import.meta.url)),
 });
 
+// The tseslint.config function is a variadic identity function which is a fancy way of saying
+// that it's a function with a spread argument that accepts any number flat config objects
+// and returns the objects unchanged. It exists as a way to quickly and easily provide
+// types for your flat config file without the need for JSDoc type comments.
 export default tseslint.config(
   eslint.configs.recommended,
   requireUseeffectDependencyArray.configs.recommended,
@@ -37,6 +41,10 @@ export default tseslint.config(
   ...compat.extends('plugin:import/errors'),
   prettier,
   {
+    // This configuration object matches all files that other configuration objects
+    // match, because config objects that don’t specify files or ignores apply to
+    // all files that have been matched by any other configuration object.
+    // https://eslint.org/docs/latest/use/configure/configuration-files#:~:text=You%20can%20use,default.%20For%20example%3A
     name: 'All files',
     settings: {
       'import/internal-regex': '^(~|src)',
@@ -205,13 +213,20 @@ export default tseslint.config(
         'reportUnknownError',
       ],
       'es/no-optional-catch-binding': 'error',
+      // This rule can be used just fine with Prettier as long as
+      // you don’t use the "multi-line" or "multi-or-nest" option.
+      // https://github.com/prettier/eslint-config-prettier/?tab=readme-ov-file#curly
       curly: ['error', 'all'],
     },
   },
   {
-    // All TypeScript files
     name: 'All TypeScript files',
     files: ['**/*.+(ts|tsx)'],
+    // This syntactic sugar comes from typescript-eslint's Flat config helper,
+    // it allows you to more easily extend shared configs for specific file
+    // patterns whilst also overriding rules/options provided by those configs.
+    // IT HAS NOTHING TO DO WITH .ESLINTRC's EXTENDS KEY!
+    // https://typescript-eslint.io/packages/typescript-eslint#flat-config-extends
     extends: [
       noDestructuringArraysAsObjects.configs.recommended,
       ...tseslint.configs.strictTypeChecked,
@@ -339,10 +354,10 @@ export default tseslint.config(
           extensions: ['.jsx', '.tsx'],
         },
       ],
+      curly: ['error', 'all'],
     },
   },
   {
-    // Test files and test related infrastructure
     name: 'Test files and test related infrastructure',
     files: ['**/+(*.)+(spec|test).+(ts|js)?(x)', 'src/testing/**'],
     extends: [...compat.extends('plugin:testing-library/react')],
@@ -367,7 +382,6 @@ export default tseslint.config(
     },
   },
   {
-    // Root level .js/.ts configuration files
     name: 'Root level .js/.ts configuration files',
     files: ['*.js', '*.ts', '__mocks__/**/*.[j|t]s?(x)'],
     languageOptions: {
@@ -395,7 +409,6 @@ export default tseslint.config(
     },
   },
   {
-    // Root level .ts configuration files
     name: 'Root level .ts configuration files',
     files: ['*.ts'],
     languageOptions: {
@@ -405,7 +418,6 @@ export default tseslint.config(
     },
   },
   {
-    // Type definition files.
     name: 'Type definition files',
     files: ['**/*.d.ts'],
     rules: {
