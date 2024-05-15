@@ -18,6 +18,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import unusedImports from 'eslint-plugin-unused-imports';
 import vitest from 'eslint-plugin-vitest';
 import globals from 'globals';
+// eslint-disable-next-line import/no-unresolved
 import tseslint from 'typescript-eslint';
 
 const compat = new FlatCompat({
@@ -54,13 +55,14 @@ export default tseslint.config(
     },
     languageOptions: {
       globals: {
+        ...globals.es2015,
         ...globals.browser,
-        ...globals.es6,
       },
+
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       parserOptions: {
-        ecmaVersion: 'latest',
         generators: true,
-        sourceType: 'module',
         ecmaFeatures: {
           jsx: true,
         },
@@ -72,7 +74,6 @@ export default tseslint.config(
     plugins: {
       'react-refresh': reactRefresh,
       react: reactLint,
-      'eslint-comments': eslintComments,
       'unused-imports': unusedImports,
       'new-with-error': newWithError,
       es,
@@ -235,10 +236,10 @@ export default tseslint.config(
     ],
     plugins: { '@typescript-eslint': tseslint.plugin, deprecation },
     languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       parser: tseslint.parser,
       parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
         ecmaFeatures: {
           jsx: true,
         },
@@ -387,11 +388,6 @@ export default tseslint.config(
     languageOptions: {
       globals: {
         ...globals.node,
-      },
-    },
-    settings: {
-      'import/resolver': {
-        typescript: true,
       },
     },
     rules: {
