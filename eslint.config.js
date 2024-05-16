@@ -1248,7 +1248,6 @@ export default tseslint.config(
         },
       ],
       'import/no-restricted-paths': ['off', { zones: [] }],
-      'import/no-nodejs-modules': 'off',
     },
   },
   {
