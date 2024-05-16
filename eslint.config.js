@@ -58,7 +58,6 @@ export default tseslint.config(
         ...globals.es2015,
         ...globals.browser,
       },
-
       ecmaVersion: 'latest',
       sourceType: 'module',
       parserOptions: {
@@ -379,7 +378,6 @@ export default tseslint.config(
         },
       ],
       'import/no-restricted-paths': ['off', { zones: [] }],
-      'import/no-nodejs-modules': 'off',
     },
   },
   {
