@@ -926,6 +926,7 @@ export default tseslint.config(
       globals: {
         ...globals.es2015,
         ...globals.browser,
+        ...globals.node,
       },
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -1045,9 +1046,12 @@ export default tseslint.config(
           },
         },
       ],
+      'import/no-default-export': 'error',
       'import/no-deprecated': 'error',
+      'import/no-commonjs': 'error',
       'import/no-empty-named-blocks': 'error',
       'import/no-named-as-default-member': 'error',
+      'import/no-nodejs-modules': 'error',
       'import/no-unresolved': [
         'error',
         { commonjs: true, caseSensitive: true },
