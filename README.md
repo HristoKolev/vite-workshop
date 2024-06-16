@@ -337,7 +337,6 @@ npm run format
 npm i -D eslint
 npm i -D @eslint/eslintrc
 npm i -D @eslint/js
-npm i -D eslint-config-airbnb
 npm i -D eslint-config-prettier
 npm i -D eslint-import-resolver-alias
 npm i -D eslint-import-resolver-typescript
@@ -358,6 +357,7 @@ npm i -D @arabasta/eslint-plugin-redux-use-app-functions
 npm i -D @arabasta/eslint-plugin-report-caught-error
 npm i -D @arabasta/eslint-plugin-require-useeffect-dependency-array
 npm i -D @eslint-community/eslint-plugin-eslint-comments
+npm i -D confusing-browser-globals
 npm i -D rimraf
 ```
 
