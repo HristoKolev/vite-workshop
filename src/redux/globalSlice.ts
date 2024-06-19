@@ -1,9 +1,6 @@
-import {
-  createAsyncThunk,
-  createSelector,
-  createSlice,
-} from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 
+import { createAppAsyncThunk } from '~redux/createAppAsyncThunk';
 import {
   createPet,
   deletePet,
@@ -12,7 +9,7 @@ import {
   getPetList,
   updatePet,
 } from '~utils/api-client';
-import { reportError } from '~utils/reportError';
+import { reportUnknownError } from '~utils/reportUnknownError';
 import type { Pet, PetKind, PetListItem } from '~utils/server-data-model';
 
 import type { ReduxState } from './createReduxStore';
@@ -61,7 +58,7 @@ interface FetchedPetsData {
   petKinds: PetKind[] | undefined;
 }
 
-export const fetchPetsData = createAsyncThunk<FetchedPetsData>(
+export const fetchPetsData = createAppAsyncThunk<FetchedPetsData>(
   'global/fetchPetsData',
   async (_, { getState }) => {
     const state = getState() as { global: GlobalState };
@@ -81,37 +78,37 @@ export const fetchPetsData = createAsyncThunk<FetchedPetsData>(
         petKinds: await petKindsPromise,
       };
     } catch (error) {
-      reportError(error);
+      reportUnknownError(error);
       throw error;
     }
   }
 );
 
-export const deletePetThunk = createAsyncThunk<unknown, number>(
+export const deletePetThunk = createAppAsyncThunk<unknown, number>(
   'global/deletePetThunk',
   async (petId) => {
     try {
       await deletePet(petId);
     } catch (error) {
-      reportError(error);
+      reportUnknownError(error);
       throw error;
     }
   }
 );
 
-export const getPetThunk = createAsyncThunk<Pet, number>(
+export const getPetThunk = createAppAsyncThunk<Pet, number>(
   'global/getPetThunk',
   async (petId) => {
     try {
       return await getPet(petId);
     } catch (error) {
-      reportError(error);
+      reportUnknownError(error);
       throw error;
     }
   }
 );
 
-export const savePetThunk = createAsyncThunk<Pet, Omit<Pet, 'petId'>>(
+export const savePetThunk = createAppAsyncThunk<Pet, Omit<Pet, 'petId'>>(
   'global/savePetThunk',
   async (petData, { getState }) => {
     const state = getState() as { global: GlobalState };
@@ -128,7 +125,7 @@ export const savePetThunk = createAsyncThunk<Pet, Omit<Pet, 'petId'>>(
 
       return updatedPet;
     } catch (error) {
-      reportError(error);
+      reportUnknownError(error);
       throw error;
     }
   }

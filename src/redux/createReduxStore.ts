@@ -21,6 +21,7 @@ export type ReduxState = ReturnType<
 >;
 
 export const useAppDispatch = () =>
+  // eslint-disable-next-line @arabasta/redux-use-app-functions/use-app-dispatch
   useDispatch<ReturnType<typeof createReduxStore>['dispatch']>();
 
 export const useAppSelector: TypedUseSelectorHook<ReduxState> = useSelector;

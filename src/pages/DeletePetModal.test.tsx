@@ -16,7 +16,7 @@ import { mockPetList } from '~testing/mock-data';
 import { defaultHandlers, renderWithProviders } from '~testing/utils';
 import { WaitHandle } from '~testing/wait-handle';
 import { BASE_URL } from '~utils/api-client';
-import { reportError } from '~utils/reportError';
+import { reportUnknownError } from '~utils/reportUnknownError';
 import type { PetListItem } from '~utils/server-data-model';
 
 import { DeletePetModal } from './DeletePetModal';
@@ -162,5 +162,5 @@ test('shows error when the delete call fails', async () => {
 
   expect(handleOnDeleted).not.toHaveBeenCalled();
 
-  expect(reportError).toHaveBeenCalled();
+  expect(reportUnknownError).toHaveBeenCalled();
 });
