@@ -6,7 +6,7 @@ import { mockPetKindsByValue, mockPetList } from '~testing/mock-data';
 
 import { PetList } from './PetList';
 
-vi.mock('../utils/reportError');
+vi.mock('../utils/reportUnknownError');
 
 afterEach(() => {
   cleanup();

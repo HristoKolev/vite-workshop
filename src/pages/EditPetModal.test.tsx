@@ -26,7 +26,7 @@ import { BASE_URL } from '~utils/api-client';
 
 import { EditPetModal } from './EditPetModal';
 
-vi.mock('../utils/reportError');
+vi.mock('../utils/reportUnknownError');
 
 const server = setupServer(...defaultHandlers);
 
