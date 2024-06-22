@@ -21,7 +21,7 @@ import type { PetListItem } from '~utils/server-data-model';
 
 import { DeletePetModal } from './DeletePetModal';
 
-vi.mock('../utils/reportError');
+vi.mock('../utils/reportUnknownError');
 
 const server = setupServer(...defaultHandlers);
 

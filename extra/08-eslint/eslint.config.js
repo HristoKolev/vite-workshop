@@ -3,7 +3,6 @@ import { fileURLToPath } from 'url';
 
 import noDestructuringArraysAsObjects from '@arabasta/eslint-plugin-no-destructuring-arrays-as-objects';
 import noTestingLibraryWithoutCleanup from '@arabasta/eslint-plugin-no-testing-library-without-cleanup';
-import reduxUseAppFunctions from '@arabasta/eslint-plugin-redux-use-app-functions';
 import reportCaughtError from '@arabasta/eslint-plugin-report-caught-error';
 import requireUseeffectDependencyArray from '@arabasta/eslint-plugin-require-useeffect-dependency-array';
 import { FlatCompat } from '@eslint/eslintrc';
@@ -36,7 +35,6 @@ export default tseslint.config(
   eslint.configs.recommended,
   requireUseeffectDependencyArray.configs.recommended,
   reportCaughtError.configs.recommended,
-  reduxUseAppFunctions.configs.recommended,
   noTestingLibraryWithoutCleanup.configs.recommended,
   ...compat.extends('plugin:react/recommended'),
   ...compat.extends('plugin:react-hooks/recommended'),
