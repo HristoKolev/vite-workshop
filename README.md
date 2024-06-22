@@ -353,12 +353,12 @@ npm i -D eslint-plugin-unused-imports
 npm i -D eslint-plugin-vitest
 npm i -D @arabasta/eslint-plugin-no-destructuring-arrays-as-objects
 npm i -D @arabasta/eslint-plugin-no-testing-library-without-cleanup
-npm i -D @arabasta/eslint-plugin-redux-use-app-functions
 npm i -D @arabasta/eslint-plugin-report-caught-error
 npm i -D @arabasta/eslint-plugin-require-useeffect-dependency-array
 npm i -D @eslint-community/eslint-plugin-eslint-comments
 npm i -D confusing-browser-globals
 npm i -D rimraf
+npm i -D globals
 ```
 
 - Copy the contents of the `extra/08-eslint` directory to the root directory of this workshop.

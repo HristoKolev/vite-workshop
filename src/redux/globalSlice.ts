@@ -61,8 +61,7 @@ interface FetchedPetsData {
 export const fetchPetsData = createAppAsyncThunk<FetchedPetsData>(
   'global/fetchPetsData',
   async (_, { getState }) => {
-    const state = getState() as { global: GlobalState };
-    const { petKinds } = state.global;
+    const { petKinds } = getState().global;
 
     try {
       let petKindsPromise;
@@ -111,8 +110,7 @@ export const getPetThunk = createAppAsyncThunk<Pet, number>(
 export const savePetThunk = createAppAsyncThunk<Pet, Omit<Pet, 'petId'>>(
   'global/savePetThunk',
   async (petData, { getState }) => {
-    const state = getState() as { global: GlobalState };
-    const { selectedPet } = state.global;
+    const { selectedPet } = getState().global;
 
     try {
       let updatedPet;
