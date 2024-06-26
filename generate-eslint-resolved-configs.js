@@ -1,19 +1,23 @@
 import { exec } from 'node:child_process';
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
+
+async function checkPathExists(p) {
+  try {
+    await fs.access(p);
+
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function sortObjectKeysAlphabetically(obj) {
   const entries = Object.entries(obj);
 
   entries.sort((a, b) => a[0].localeCompare(b[0]));
 
-  const sortedObject = entries.reduce((acc, currentValue) => {
-    const [key, value] = currentValue;
-    acc[key] = value;
-    return acc;
-  }, {});
-
-  return sortedObject;
+  return Object.fromEntries(entries);
 }
 
 function sortArrayAlphabetically(array) {
@@ -22,6 +26,8 @@ function sortArrayAlphabetically(array) {
 
   return clonedArray;
 }
+
+const NUMBER_TO_SEVERITY_MAP = { 0: 'off', 1: 'warn', 2: 'error' };
 
 function preprocessConfig(configContent) {
   const config = JSON.parse(configContent);
@@ -32,30 +38,26 @@ function preprocessConfig(configContent) {
 
   config.plugins = sortArrayAlphabetically(config.plugins);
 
-  const rules = Object.entries(config.rules);
+  const rulesEntries = Object.entries(config.rules);
 
-  rules.sort((a, b) => a[0].localeCompare(b[0]));
+  rulesEntries.sort((a, b) => a[0].localeCompare(b[0]));
 
-  const sortedRules = rules.reduce((accumulator, currentValue) => {
-    const [key, value] = currentValue;
+  for (const rule of rulesEntries) {
+    const [ruleName, ruleOptions] = rule;
 
-    if (Array.isArray(value)) {
-      const severity = value[0];
+    if (Array.isArray(ruleOptions)) {
+      const severity = ruleOptions[0];
 
-      if (severity === 'off') {
-        value[0] = 0;
-      } else if (severity === 'warn') {
-        value[0] = 1;
-      } else if (severity === 'error') {
-        value[0] = 2;
-      }
+      ruleOptions[0] = NUMBER_TO_SEVERITY_MAP[severity];
+    } else {
+      // This isn't supposed to happen
+      throw new Error(
+        `Rule Options must always be an array, but this is not the case for: ${ruleName}`
+      );
     }
+  }
 
-    accumulator[key] = value;
-    return accumulator;
-  }, {});
-
-  config.rules = sortedRules;
+  config.rules = Object.fromEntries(rulesEntries);
 
   return JSON.stringify(config, null, 2);
 }
@@ -82,28 +84,32 @@ const ESLINT_RESOLVED_CONFIGS_FOLDER = 'eslint-resolved-configs';
 
 (async () => {
   const eslintPaths = [
-    { filename: 'file-js.json', lintPath: 'file.js' },
-    { filename: 'src-file-js.json', lintPath: 'src/file.js' },
-    { filename: 'file-ts.json', lintPath: 'file.ts' },
-    { filename: 'src-file-ts.json', lintPath: 'src/file.ts' },
-    { filename: 'file-d-ts.json', lintPath: 'file.d.ts' },
+    'config-file.js',
+    'src/file.js',
+    'config-file.ts',
+    'src/file.ts',
+    'declaration-file.d.ts',
   ];
 
   const resolvedConfigs = await Promise.all(
-    eslintPaths.map((eslintPath) => getResolvedConfig(eslintPath.lintPath))
+    eslintPaths.map((lintPath) => getResolvedConfig(lintPath))
   );
 
-  if (!fs.existsSync(ESLINT_RESOLVED_CONFIGS_FOLDER)) {
-    fs.mkdirSync(ESLINT_RESOLVED_CONFIGS_FOLDER);
+  const folderExists = await checkPathExists(ESLINT_RESOLVED_CONFIGS_FOLDER);
+  if (!folderExists) {
+    await fs.mkdir(ESLINT_RESOLVED_CONFIGS_FOLDER);
   }
 
   for (let i = 0; i < resolvedConfigs.length; i += 1) {
-    const { filename } = eslintPaths[i];
+    const lintPath = eslintPaths[i];
     const resolvedProcessedConfig = preprocessConfig(resolvedConfigs[i]);
 
-    fs.writeFileSync(
-      path.join(ESLINT_RESOLVED_CONFIGS_FOLDER, filename),
-      resolvedProcessedConfig
+    const filename = path.join(
+      ESLINT_RESOLVED_CONFIGS_FOLDER,
+      lintPath + '.json'
     );
+
+    await fs.mkdir(path.dirname(filename), { recursive: true });
+    await fs.writeFile(filename, resolvedProcessedConfig);
   }
 })();
