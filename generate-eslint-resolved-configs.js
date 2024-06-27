@@ -2,16 +2,6 @@ import { exec } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-async function checkPathExists(p) {
-  try {
-    await fs.access(p);
-
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 function sortObjectKeysAlphabetically(obj) {
   const entries = Object.entries(obj);
 
@@ -21,10 +11,7 @@ function sortObjectKeysAlphabetically(obj) {
 }
 
 function sortArrayAlphabetically(array) {
-  const clonedArray = [...array];
-  clonedArray.sort((a, b) => a.localeCompare(b));
-
-  return clonedArray;
+  return array.toSorted((a, b) => a.localeCompare(b));
 }
 
 const NUMBER_TO_SEVERITY_MAP = { 0: 'off', 1: 'warn', 2: 'error' };
@@ -95,18 +82,13 @@ const ESLINT_RESOLVED_CONFIGS_FOLDER = 'eslint-resolved-configs';
     eslintPaths.map((lintPath) => getResolvedConfig(lintPath))
   );
 
-  const folderExists = await checkPathExists(ESLINT_RESOLVED_CONFIGS_FOLDER);
-  if (!folderExists) {
-    await fs.mkdir(ESLINT_RESOLVED_CONFIGS_FOLDER);
-  }
-
   for (let i = 0; i < resolvedConfigs.length; i += 1) {
     const lintPath = eslintPaths[i];
     const resolvedProcessedConfig = preprocessConfig(resolvedConfigs[i]);
 
     const filename = path.join(
       ESLINT_RESOLVED_CONFIGS_FOLDER,
-      lintPath + '.json'
+      `${lintPath}.json`
     );
 
     await fs.mkdir(path.dirname(filename), { recursive: true });
