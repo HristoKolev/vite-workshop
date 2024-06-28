@@ -69,29 +69,27 @@ async function getResolvedConfig(filepath) {
 
 const ESLINT_RESOLVED_CONFIGS_FOLDER = 'eslint-resolved-configs';
 
-(async () => {
-  const eslintPaths = [
-    'config-file.js',
-    'src/file.js',
-    'config-file.ts',
-    'src/file.ts',
-    'declaration-file.d.ts',
-  ];
+const eslintPaths = [
+  'config-file.js',
+  'src/file.js',
+  'config-file.ts',
+  'src/file.ts',
+  'declaration-file.d.ts',
+];
 
-  const resolvedConfigs = await Promise.all(
-    eslintPaths.map((lintPath) => getResolvedConfig(lintPath))
+const resolvedConfigs = await Promise.all(
+  eslintPaths.map((lintPath) => getResolvedConfig(lintPath))
+);
+
+for (let i = 0; i < resolvedConfigs.length; i += 1) {
+  const lintPath = eslintPaths[i];
+  const resolvedProcessedConfig = preprocessConfig(resolvedConfigs[i]);
+
+  const filename = path.join(
+    ESLINT_RESOLVED_CONFIGS_FOLDER,
+    `${lintPath}.json`
   );
 
-  for (let i = 0; i < resolvedConfigs.length; i += 1) {
-    const lintPath = eslintPaths[i];
-    const resolvedProcessedConfig = preprocessConfig(resolvedConfigs[i]);
-
-    const filename = path.join(
-      ESLINT_RESOLVED_CONFIGS_FOLDER,
-      `${lintPath}.json`
-    );
-
-    await fs.mkdir(path.dirname(filename), { recursive: true });
-    await fs.writeFile(filename, resolvedProcessedConfig);
-  }
-})();
+  await fs.mkdir(path.dirname(filename), { recursive: true });
+  await fs.writeFile(filename, resolvedProcessedConfig);
+}
