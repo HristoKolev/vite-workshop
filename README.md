@@ -368,7 +368,7 @@ npm i -D globals
 ```
 "lint": "eslint ./ --max-warnings 0",
 "lint:fix": "npm run lint -- --fix",
-"generate-eslint-resolved-configs": "rimraf ./eslint-resolved-configs && node generate-eslint-resolved-configs.js"
+"generate-eslint-resolved-configs": "rimraf ./eslint-resolved-configs && node generate-eslint-resolved-configs.js && npm run format"
 ```
 
 - Run the `lint:fix` npm script
