@@ -28,7 +28,7 @@ npm init -y
 - Install the packages
 
 ```shell
-npm i -D vite typescript
+npm i -D vite
 ```
 
 - Install a package that you want to use in your project
