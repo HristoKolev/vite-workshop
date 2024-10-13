@@ -75,7 +75,8 @@ npm run start
 - Install the packages
 
 ```shell
-npm i -D typescript @total-typescript/ts-reset
+npm i -D typescript@~5.5
+npm i -D @total-typescript/ts-reset
 ```
 
 - Copy the contents of the `extra/02-typescript` directory to the root directory of this workshop
@@ -174,8 +175,11 @@ npm run profile
 - Install the packages
 
 ```shell
-npm i react react-dom
-npm i -D @types/react @types/react-dom
+npm i react
+npm i react-dom
+
+npm i -D @types/react
+npm i -D @types/react-dom
 npm i -D @vitejs/plugin-react
 ```
 
@@ -226,8 +230,13 @@ npm run profile
 - Install the packages
 
 ```shell
-npm i -D vitest @vitest/coverage-istanbul
-npm i -D @testing-library/dom @testing-library/react @testing-library/user-event @testing-library/jest-dom jsdom
+npm i -D vitest
+npm i -D @vitest/coverage-v8
+npm i -D @testing-library/dom
+npm i -D @testing-library/react
+npm i -D @testing-library/user-event
+npm i -D @testing-library/jest-dom
+npm i -D jsdom
 npm i -D msw
 ```
 
@@ -246,7 +255,7 @@ test: {
   exclude: [...configDefaults.exclude, 'extra'],
   coverage: {
     enabled: true,
-    provider: 'istanbul',
+    provider: 'v8',
     all: true,
     include: ['**/src/**'],
     exclude: [
@@ -267,13 +276,7 @@ test: {
 - Change `tsconfig.json` to include `setupTests.ts`
 
 ```
-"include": ["src", "setupTests.ts"],
-```
-
-- Change `tsconfig.node.json` to include `setupTests.ts`
-
-```
-"include": ["vite.config.ts", "setupTests.ts"]
+"include": ["src", "vite.config.ts", "setupTests.ts"],
 ```
 
 - Add the `test` and `test:watch` npm scripts to `package.json`
@@ -334,6 +337,7 @@ npm run format
 - Install the packages
 
 ```shell
+<<<<<<< HEAD
 npm i -D eslint
 npm i -D @eslint/eslintrc
 npm i -D @eslint/js
@@ -359,6 +363,11 @@ npm i -D @eslint-community/eslint-plugin-eslint-comments
 npm i -D confusing-browser-globals
 npm i -D rimraf
 npm i -D globals
+=======
+npm i -D eslint@8
+npm i -D @arabasta/eslint-config
+npm i -D typescript-eslint
+>>>>>>> main
 ```
 
 - Copy the contents of the `extra/08-eslint` directory to the root directory of this workshop.
@@ -367,20 +376,13 @@ npm i -D globals
 
 ```
 "lint": "eslint ./ --max-warnings 0",
-"lint:fix": "npm run lint -- --fix",
-"generate-eslint-resolved-configs": "rimraf ./eslint-resolved-configs && node generate-eslint-resolved-configs.js && npm run format"
+"lint:fix": "npm run lint -- --fix"
 ```
 
 - Run the `lint:fix` npm script
 
 ```shell
 npm run lint:fix
-```
-
-- Run the `generate-eslint-resolved-configs` npm script
-
-```shell
-npm run generate-eslint-resolved-configs
 ```
 
 - Doesn't work for test files. Why?
