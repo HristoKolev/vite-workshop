@@ -337,37 +337,9 @@ npm run format
 - Install the packages
 
 ```shell
-<<<<<<< HEAD
-npm i -D eslint
-npm i -D @eslint/eslintrc
-npm i -D @eslint/js
-npm i -D eslint-config-prettier
-npm i -D eslint-import-resolver-alias
-npm i -D eslint-import-resolver-typescript
-npm i -D eslint-plugin-deprecation
-npm i -D eslint-plugin-es
-npm i -D eslint-plugin-import
-npm i -D eslint-plugin-jsx-a11y
-npm i -D eslint-plugin-new-with-error
-npm i -D eslint-plugin-react
-npm i -D eslint-plugin-react-hooks
-npm i -D eslint-plugin-react-refresh
-npm i -D eslint-plugin-testing-library
-npm i -D eslint-plugin-unused-imports
-npm i -D eslint-plugin-vitest
-npm i -D @arabasta/eslint-plugin-no-destructuring-arrays-as-objects
-npm i -D @arabasta/eslint-plugin-no-testing-library-without-cleanup
-npm i -D @arabasta/eslint-plugin-report-caught-error
-npm i -D @arabasta/eslint-plugin-require-useeffect-dependency-array
-npm i -D @eslint-community/eslint-plugin-eslint-comments
-npm i -D confusing-browser-globals
-npm i -D rimraf
-npm i -D globals
-=======
 npm i -D eslint@8
 npm i -D @arabasta/eslint-config
 npm i -D typescript-eslint
->>>>>>> main
 ```
 
 - Copy the contents of the `extra/08-eslint` directory to the root directory of this workshop.
