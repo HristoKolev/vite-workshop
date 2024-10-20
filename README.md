@@ -75,7 +75,7 @@ npm run start
 - Install the packages
 
 ```shell
-npm i -D typescript@~5.5
+npm i -D typescript@~5.6
 npm i -D @total-typescript/ts-reset
 ```
 
