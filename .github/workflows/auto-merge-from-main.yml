@@ -1,0 +1,17 @@
+name: Auto merge from "main"
+on:
+  push:
+    branches:
+      - main
+jobs:
+  auto-merge-from-main:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: docker://chinthakagodawita/autoupdate-action:v1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          PR_FILTER: 'labelled'
+          PR_LABELS: 'auto-merge-from-main'
+          MERGE_MSG: 'Merge branch "main" into "${{ github.ref_name }}"'
