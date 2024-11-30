@@ -1,10 +1,10 @@
-name: Auto merge from "main"
+name: Auto merge from default branch
 on:
   push:
     branches:
       - main
 jobs:
-  auto-merge-from-main:
+  auto-merge-from-default:
     runs-on: ubuntu-22.04
     permissions:
       contents: write
@@ -13,5 +13,5 @@ jobs:
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
           PR_FILTER: 'labelled'
-          PR_LABELS: 'auto-merge-from-main'
-          MERGE_MSG: 'Merge branch "main" into "${{ github.ref_name }}"'
+          PR_LABELS: 'auto-merge-from-default'
+          MERGE_MSG: 'Merge branch "${{ github.ref_name }}" into this branch.'
