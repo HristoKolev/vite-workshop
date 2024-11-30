@@ -1,10 +1,13 @@
-name: dependabot-ci
-on: pull_request
+name: Build and Test
+on:
+  pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
-  dependabot-tests:
+  build-and-test:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
