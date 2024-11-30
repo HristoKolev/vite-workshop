@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 jobs:
   auto-merge-from-default:
     runs-on: ubuntu-22.04
