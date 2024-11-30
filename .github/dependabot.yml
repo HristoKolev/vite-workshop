@@ -20,5 +20,7 @@ updates:
           - 'minor'
           - 'patch'
     ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-minor']
       - dependency-name: '*'
         update-types: ['version-update:semver-major']
