@@ -42,7 +42,7 @@ export default [
     rules: {
       '@arabasta/javascript/report-caught-error': [
         'off',
-        'reportUnknownError',
+        { reportFunctionName: 'reportUnknownError' },
       ],
       'import/no-restricted-paths': [
         'error',
