@@ -40,7 +40,7 @@ export default [
       },
     },
     rules: {
-      '@arabasta/report-caught-error/report-caught-error': [
+      '@arabasta/javascript/report-caught-error': [
         'off',
         'reportUnknownError',
       ],
