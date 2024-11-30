@@ -5,7 +5,6 @@ on:
       - main
 jobs:
   auto-merge-from-main:
-    name: auto-merge-from-main
     runs-on: ubuntu-22.04
     permissions:
       contents: write
