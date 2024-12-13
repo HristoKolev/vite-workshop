@@ -1,26 +1,33 @@
 version: 2
 updates:
-  - package-ecosystem: 'npm'
-    labels: ['dependencies', 'auto-merge-from-default']
-    directory: '/'
+  - package-ecosystem: npm
+    labels:
+      - dependencies
+      - auto-merge-from-default
+    directory: /
     schedule:
-      interval: 'weekly'
+      interval: weekly
     versioning-strategy: increase
     groups:
       production-dependencies:
         applies-to: version-updates
-        dependency-type: 'production'
+        dependency-type: production
         update-types:
-          - 'minor'
-          - 'patch'
+          - minor
+          - patch
       development-dependencies:
         applies-to: version-updates
-        dependency-type: 'development'
+        dependency-type: development
         update-types:
-          - 'minor'
-          - 'patch'
+          - minor
+          - patch
     ignore:
-      - dependency-name: 'typescript'
-        update-types: ['version-update:semver-minor']
+      - dependency-name: '@total-typescript/ts-reset'
+        update-types:
+          - version-update:semver-minor
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-minor
       - dependency-name: '*'
-        update-types: ['version-update:semver-major']
+        update-types:
+          - version-update:semver-major
