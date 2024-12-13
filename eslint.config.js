@@ -127,6 +127,6 @@ export default [
   }),
 
   {
-    ignores: ['dist', 'coverage', 'extra'],
+    ignores: ['dist', 'coverage', 'extra', 'scripts'],
   },
 ];
