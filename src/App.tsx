@@ -1,27 +1,114 @@
-import { type JSX, useEffect, useState } from 'react';
+import { type JSX, memo, useCallback, useEffect, useState } from 'react';
 
-import logoUrl from 'src/logo.png';
-import { formatDate } from '~helpers';
+import { DeletePetModal } from './pages/DeletePetModal';
+import { EditPetModal } from './pages/EditPetModal';
+import { PetList } from './pages/PetList';
+import { useAppDispatch, useAppSelector } from './redux/createReduxStore';
+import {
+  fetchPetsData,
+  globalActions,
+  globalSelector,
+} from './redux/globalSlice';
+import { ErrorIndicator } from './shared/ErrorIndicator';
+import { LoadingIndicator } from './shared/LoadingIndicator';
+import type { PetListItem } from './utils/server-data-model';
 
-export const App = (): JSX.Element => {
-  const [message, setMessage] = useState<string | undefined>();
+import './App.css';
+
+export const App = memo((): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const {
+    petListById,
+    petKinds,
+    petKindsByValue,
+    petList,
+    isError,
+    isLoading,
+  } = useAppSelector(globalSelector);
+
+  const fetchListData = useCallback(() => {
+    void dispatch(fetchPetsData());
+  }, [dispatch]);
 
   useEffect(() => {
-    fetch('http://localhost:3001/')
-      .then((res) => res.text())
-      .then(setMessage)
-      // eslint-disable-next-line no-console, @typescript-eslint/use-unknown-in-catch-callback-variable
-      .catch(console.error);
+    fetchListData();
+  }, [fetchListData]);
+
+  const [deletePet, setDeletePet] = useState<PetListItem | undefined>();
+  const handleOnDeleteClick = useCallback(
+    (petId: number) => {
+      setDeletePet(petListById?.[petId]);
+    },
+    [petListById]
+  );
+  const handleOnDeleteModalClose = useCallback(() => {
+    setDeletePet(undefined);
+  }, []);
+
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
+
+  const [editPetId, setEditPetId] = useState<number | undefined>();
+
+  const handleOnEditClick = useCallback((petId: number) => {
+    setEditPetId(petId);
+    setShowEditModal(true);
+  }, []);
+
+  const handleOnEditModalClose = useCallback(() => {
+    setEditPetId(undefined);
+    setShowEditModal(false);
+    dispatch(globalActions.clearSelectedPet());
+  }, [dispatch]);
+
+  const handleOnAddClick = useCallback(() => {
+    setEditPetId(undefined);
+    setShowEditModal(true);
   }, []);
 
   return (
-    <div className="text text-center">
-      <div>Hello Vite</div>
-      <div data-testid="date-label">{formatDate(new Date())}</div>
-      {message && <div data-testid="server-message">{message}</div>}
-      <div>
-        <img src={logoUrl} alt="logo" />
+    <main>
+      <div className="pet-list-page-header">
+        <h2>Pet Store</h2>
+        {petKinds && (
+          <button
+            type="button"
+            className="btn btn-green add-pet-button"
+            onClick={handleOnAddClick}
+          >
+            Add Pet
+          </button>
+        )}
       </div>
-    </div>
+
+      <hr />
+
+      <div className="pet-list-page-content">
+        {isError && <ErrorIndicator />}
+        {isLoading && <LoadingIndicator />}
+        {!isLoading && !isError && petKindsByValue && petList && (
+          <PetList
+            petList={petList}
+            petKindsByValue={petKindsByValue}
+            onEdit={handleOnEditClick}
+            onDelete={handleOnDeleteClick}
+          />
+        )}
+        {deletePet && (
+          <DeletePetModal
+            pet={deletePet}
+            onClose={handleOnDeleteModalClose}
+            onDeleted={fetchListData}
+          />
+        )}
+        {showEditModal && (
+          <EditPetModal
+            petId={editPetId}
+            onClose={handleOnEditModalClose}
+            onSaved={fetchListData}
+            onDeleted={fetchListData}
+          />
+        )}
+      </div>
+    </main>
   );
-};
+});
