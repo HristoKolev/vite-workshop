@@ -1,27 +1,157 @@
-import { type JSX, useEffect, useState } from 'react';
+import {
+  type JSX,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-import logoUrl from 'src/logo.png';
-import { formatDate } from '~helpers';
+import { DeletePetModal } from './pages/DeletePetModal';
+import { EditPetModal } from './pages/EditPetModal';
+import { PetList } from './pages/PetList';
+import { ErrorIndicator } from './shared/ErrorIndicator';
+import { LoadingIndicator } from './shared/LoadingIndicator';
+import { getPetKinds, getPetList } from './utils/api-client';
+import { reportUnknownError } from './utils/reportUnknownError';
+import type { PetKind, PetListItem } from './utils/server-data-model';
 
-export const App = (): JSX.Element => {
-  const [message, setMessage] = useState<string | undefined>();
+import './App.css';
+
+export const App = memo((): JSX.Element => {
+  const [fetchLoading, setFetchLoading] = useState<boolean>(false);
+  const [fetchError, setFetchError] = useState<boolean>(false);
+  const [petList, setPetList] = useState<PetListItem[] | undefined>();
+  const [petKinds, setPetKinds] = useState<PetKind[] | undefined>();
+  const [petKindsByValue, setPetKindsByValue] = useState<
+    Map<number, string> | undefined
+  >();
+  const [petListById, setPetListById] = useState<
+    Map<number, PetListItem> | undefined
+  >();
+  const petKindsFetchedRef = useRef<boolean>(false);
+
+  const fetchListData = useCallback(async () => {
+    setFetchError(false);
+    setFetchLoading(true);
+
+    try {
+      const petListPromise = getPetList();
+
+      if (!petKindsFetchedRef.current) {
+        const kinds = await getPetKinds();
+        const kindsByValue = new Map();
+        for (const kind of kinds) {
+          kindsByValue.set(kind.value, kind.displayName);
+        }
+        setPetKinds(kinds);
+        setPetKindsByValue(kindsByValue);
+        petKindsFetchedRef.current = true;
+      }
+
+      const petItems = await petListPromise;
+      const listById = new Map();
+      for (const pet of petItems) {
+        listById.set(pet.petId, pet);
+      }
+      setPetList(petItems);
+      setPetListById(listById);
+    } catch (error) {
+      reportUnknownError(error);
+
+      setFetchError(true);
+    } finally {
+      setFetchLoading(false);
+    }
+  }, [petKindsFetchedRef]);
 
   useEffect(() => {
-    fetch('http://localhost:3001/')
-      .then((res) => res.text())
-      .then(setMessage)
-      // eslint-disable-next-line no-console, @typescript-eslint/use-unknown-in-catch-callback-variable
-      .catch(console.error);
+    fetchListData().catch(reportUnknownError);
+  }, [fetchListData]);
+
+  const [deletePet, setDeletePet] = useState<PetListItem | undefined>();
+  const handleOnDeleteClick = useCallback(
+    (petId: number) => {
+      setDeletePet(petListById?.get(petId));
+    },
+    [petListById]
+  );
+
+  const handleOnDeleteModalClose = useCallback(() => {
+    setDeletePet(undefined);
+  }, []);
+
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
+  const [editPetId, setEditPetId] = useState<number | undefined>();
+  const handleOnEditClick = useCallback((petId: number) => {
+    setEditPetId(petId);
+    setShowEditModal(true);
+  }, []);
+  const handleOnEditModalClose = useCallback(() => {
+    setEditPetId(undefined);
+    setShowEditModal(false);
+  }, []);
+
+  const handleOnAddClick = useCallback(() => {
+    setEditPetId(undefined);
+    setShowEditModal(true);
   }, []);
 
   return (
-    <div className="text text-center">
-      <div>Hello Vite</div>
-      <div data-testid="date-label">{formatDate(new Date())}</div>
-      {message && <div data-testid="server-message">{message}</div>}
-      <div>
-        <img src={logoUrl} alt="logo" />
+    <main>
+      <div className="pet-list-page-header">
+        <h2>Pet Store</h2>
+
+        {petKinds && (
+          <button
+            type="button"
+            className="btn btn-green add-pet-button"
+            onClick={handleOnAddClick}
+          >
+            Add Pet
+          </button>
+        )}
       </div>
-    </div>
+
+      <hr />
+
+      <div className="pet-list-page-content">
+        {fetchError && <ErrorIndicator />}
+        {fetchLoading && <LoadingIndicator />}
+
+        {petList && petKindsByValue && petKinds && (
+          <>
+            {!fetchLoading && !fetchError && (
+              <PetList
+                petList={petList}
+                onEdit={handleOnEditClick}
+                onDelete={handleOnDeleteClick}
+                petKindsByValue={petKindsByValue}
+              />
+            )}
+
+            {deletePet && (
+              <DeletePetModal
+                pet={deletePet}
+                onClose={handleOnDeleteModalClose}
+                onDeleted={fetchListData}
+                petKindsByValue={petKindsByValue}
+              />
+            )}
+
+            {showEditModal && (
+              <EditPetModal
+                petId={editPetId}
+                onClose={handleOnEditModalClose}
+                onSaved={fetchListData}
+                onDeleted={fetchListData}
+                petKindsByValue={petKindsByValue}
+                petKinds={petKinds}
+              />
+            )}
+          </>
+        )}
+      </div>
+    </main>
   );
-};
+});
