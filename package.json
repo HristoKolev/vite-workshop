@@ -4,6 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "postinstall": "npx @elbaph/generate-dependabot-config-from-package-json --no-major-updates",
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
