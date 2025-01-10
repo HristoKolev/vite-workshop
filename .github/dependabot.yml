@@ -3,6 +3,7 @@ updates:
   - package-ecosystem: npm
     labels:
       - dependencies
+      - auto-merge-from-default
     directory: /
     schedule:
       interval: weekly
