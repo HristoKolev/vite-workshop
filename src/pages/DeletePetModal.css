@@ -1,0 +1,15 @@
+.delete-pet-modal-list-item {
+  padding: 7px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.delete-pet-modal {
+  width: calc(90vw - 40px);
+}
+
+@media screen and (min-width: 650px) {
+  .delete-pet-modal {
+    width: 570px;
+  }
+}
